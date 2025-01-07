@@ -39,11 +39,11 @@ const Layout = ({ children }) => {
       </View>
 
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate('UserHome')}>
           <Image source={require('../assets/icon_home.png')} style={styles.image1} />
         </TouchableOpacity >
 
-        <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
+        <TouchableOpacity>
           <Image source={require('../assets/icon_profile.png')} style={styles.image2} />
         </TouchableOpacity>
       </View>

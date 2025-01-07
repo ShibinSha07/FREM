@@ -4,6 +4,7 @@ import MapView, { Marker, Polyline } from 'react-native-maps';
 import axios from 'axios';
 import polyline from '@mapbox/polyline';
 import * as Location from 'expo-location';
+import Layout from '../components/Layout';
 
 export default function LocateScreen ({ navigation }) {
   const [region, setRegion] = useState({
@@ -83,6 +84,7 @@ export default function LocateScreen ({ navigation }) {
   }, [vehicleLocation]);
 
   return (
+    <Layout>
     <View style={styles.container}>
       <MapView
         style={styles.map}
@@ -104,6 +106,7 @@ export default function LocateScreen ({ navigation }) {
         )}
       </MapView>
     </View>
+    </Layout>
   );
 }
 
