@@ -1,46 +1,32 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
+import { View, Text, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-const WelcomeScreen = ({ navigation }) => {
+export default function WelcomeScreen({ navigation }) {
+
+
   return (
-    <View style={styles.container}>
-      <Image style={styles.logo} source={require('../assets/fire_logo.png')} />
-      <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('LoginScreen')}>
-        <Text style={styles.btnText}>Go to Home Screen</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+    <TouchableOpacity activeOpacity={1} style={styles.container} onPress={() => navigation.navigate('LoginScreen')}>
+      <Image
+        source={require('../assets/fire_logo.png')}
+        style={styles.logo}
+      />
+      <Text style={styles.title}>FREM</Text> 
 
-export default WelcomeScreen;
+    </TouchableOpacity>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: 'whigrayte',
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f5f5f5', // Light gray background for better contrast
+    alignItems: 'center'
   },
-  logo: {
-    width: 250, // Adjust to fit the design
-    height: 250,
-    marginBottom: 200,
-  },
-  btn: {
-    backgroundColor: '#1e90ff', // Nice blue color
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5, // Adds shadow for Android
-  },
-  btnText: {
-    color: '#fff',
-    fontSize: 18,
+  title: {
+    marginTop: '200',
+    fontSize: 40,
     fontWeight: 'bold',
-    textAlign: 'center',
+    color: 'black'
   },
 });

@@ -1,13 +1,16 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity,Image, View } from 'react-native';
 import React from 'react';
 import Layout from '../components/Layout';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
     return (
         <Layout>
             <View style={styles.container}>
                 <TouchableOpacity style={styles.task}>
-                    <Text style={styles.taskText}>This is a task</Text>
+                    <Text style={styles.taskText}>No task</Text>
+                    <TouchableOpacity  onPress={() => navigation.navigate('ActiveScreen')}>
+                        <Image style={styles.reload} source={require('../assets/reload.png')}/>
+                    </TouchableOpacity>
                 </TouchableOpacity>
             </View>
         </Layout>
@@ -34,6 +37,11 @@ const styles = StyleSheet.create({
         // shadowOpacity: 0.1,
         // shadowRadius: 4,
         elevation: 3, // Elevation for Android shadow
+    },
+    reload: {
+        height: 100,
+        width:100,
+        marginLeft: 100,
     },
     taskText: {
         color: '#333', // Darker gray for text
