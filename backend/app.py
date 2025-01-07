@@ -104,18 +104,32 @@ def check_allocation(vehicle_id):
     allocation = db.session.query(Allocation, Incident).join(Incident, Allocation.incident_id == Incident.id).filter(Allocation.vehicle_id == vehicle_id).first()
 
     if allocation:
-        # If an allocation exists, return the associated location
+        # If an allocation exists, get the Incident object
         incident = allocation[1]  # allocation[1] is the Incident object from the join
-        return jsonify({
-            "allocated": True,
-            "location": incident.location
-        }), 200
+
+        # Parse the location to extract latitude and longitude
+        if incident.location.startswith("POINT"):
+            coords = incident.location.replace("POINT(", "").replace(")", "").split()
+            longitude = float(coords[0])
+            latitude = float(coords[1])
+
+            return jsonify({
+                "allocated": True,
+                "latitude": latitude,
+                "longitude": longitude
+            }), 200
+        else:
+            return jsonify({
+                "allocated": True,
+                "message": "Invalid location format."
+            }), 500
     else:
         # If no allocation exists, return a message indicating no allocation
         return jsonify({
             "allocated": False,
             "message": f"Vehicle {vehicle_id} is not allocated to any incident."
         }), 200
+
 
 @app.route('/allocation/<int:vehicle_id>', methods=['DELETE'])
 def delete_allocation(vehicle_id):
@@ -150,4 +164,4 @@ def get_allocations():
 #     db.create_all()
 
 if __name__ == '__main__':
-    app.run(debug=True, host="10.32.1.214", port=3001)
+    app.run(debug=True, host="192.168.136.201", port=3001)
