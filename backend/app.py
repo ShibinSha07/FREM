@@ -39,13 +39,27 @@ def home():
 @app.route('/incidents', methods=['POST'])
 def create_incident():
     data = request.json
+
+    # Create a new incident
     new_incident = Incident(
         location=data['location'],  # Format: "POINT(longitude latitude)"
         status=data['status']
     )
     db.session.add(new_incident)
     db.session.commit()
-    return jsonify({"message": "Incident created", "id": new_incident.id}), 201
+
+    # Add a new allocation for the incident (assign vehicle_id = 1 for now)
+    new_allocation = Allocation(
+        vehicle_id=1,  # Default vehicle ID (you can change logic for dynamic assignment)
+        incident_id=new_incident.id
+    )
+    db.session.add(new_allocation)
+    db.session.commit()
+
+    return jsonify({"message": "Incident created and vehicle allocated", 
+                    "incident_id": new_incident.id, 
+                    "vehicle_id": new_allocation.vehicle_id}), 201
+
 
 @app.route('/incidents', methods=['GET'])
 def get_incidents():
@@ -84,6 +98,24 @@ def allocate_vehicle():
     db.session.commit()
     return jsonify({"message": "Vehicle allocated to incident"}), 201
 
+@app.route('/<int:vehicle_id>/allocated', methods=['GET'])
+def check_allocation(vehicle_id):
+    # Query the Allocation table for the given vehicle_id
+    allocation = Allocation.query.filter_by(vehicle_id=vehicle_id).first()
+
+    if allocation:
+        # If an allocation exists, return the associated incident ID
+        return jsonify({
+            "allocated": True,
+            "incident_id": allocation.incident_id
+        }), 200
+    else:
+        # If no allocation exists, return a message indicating no allocation
+        return jsonify({
+            "allocated": False,
+            "message": f"Vehicle {vehicle_id} is not allocated to any incident."
+        }), 200
+
 @app.route('/allocation', methods=['GET'])
 def get_allocations():
     allocations = Allocation.query.all()
@@ -98,4 +130,4 @@ def get_allocations():
 #     db.create_all()
 
 if __name__ == '__main__':
-    app.run(debug=True, host="10.32.1.214", port=3001)
+    app.run(debug=True, host="192.168.136.201", port=3001)
