@@ -1,8 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 
 # Configure PostgreSQL database connection
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1234@localhost/FREM'
@@ -90,9 +93,9 @@ def get_allocations():
     } for alloc in allocations])
 
 # Initialize the database (run this once)
-@app.before_request
-def create_tables():
-    db.create_all()
+# @app.before_request
+# def create_tables():
+#     db.create_all()
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=True, host="10.32.1.214", port=3001)

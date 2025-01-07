@@ -1,11 +1,55 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Linking, Button, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
+import axios from 'axios';
 
 const App = ({ navigation }) => {
+
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
+
+    
+    const makeCall = async () => {
+        try {
+            // Step 1: Get the user's location
+            const { status } = await Location.requestForegroundPermissionsAsync();
+
+            if (status !== "granted") {
+                Alert.alert("Permission denied", "Location permission is required.");
+                return;
+            }
+
+            // const location = await Location.getCurrentPositionAsync({});
+            const { latitude, longitude } = location.coords;
+
+            // Step 2: Format the data for the API
+            const locationString = `POINT(${longitude} ${latitude})`; // Required format
+            const requestData = {
+                location: locationString,
+                status: "pending", // Replace with appropriate status value
+            };
+
+            // Step 3: Send location to the database
+            const response = await axios.post("http://10.32.1.214:3001/incidents", requestData);
+            console.log(response)
+            console.log("Incident created:", response.data);
+
+            // Step 4: Make the call
+            const phoneNumber = "tel:8281396739";
+            const supported = await Linking.canOpenURL(phoneNumber);
+
+            if (!supported) {
+                Alert.alert("Error", "Phone call not supported on this device.");
+            } else {
+                await Linking.openURL(phoneNumber);
+            }
+        }
+        catch (error) {
+            console.error("An error occurred", error);
+            Alert.alert("Error", "Something went wrong. Please try again.");
+        }
+    };
 
     const handleLocationFetch = async () => {
         try {
@@ -31,7 +75,7 @@ const App = ({ navigation }) => {
             {/* Header Section */}
             <View style={styles.header}>
                 <Image
-                    source={require('../assests/fire_rescue_logo.jpg')}
+                    source={require('../assets/fire_logo.png')}
                     style={styles.logo}
                 />
                 <Text style={styles.title}>FREM</Text>
@@ -43,7 +87,7 @@ const App = ({ navigation }) => {
             </View>
 
             {/* Emergency Call Button */}
-            <TouchableOpacity style={styles.emergencyButton}>
+            <TouchableOpacity style={styles.emergencyButton} onPress={makeCall}>
                 <Text style={styles.emergencyButtonText}>Emergency Call</Text>
             </TouchableOpacity>
 
