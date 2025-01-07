@@ -28,6 +28,10 @@ class Allocation(db.Model):
     vehicle_id = db.Column(db.Integer, db.ForeignKey('vehicle.id'), primary_key=True)
     incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'), primary_key=True)
 
+
+@app.get("/")
+def home():
+    return "Hello World"
 # Routes
 @app.route('/incidents', methods=['POST'])
 def create_incident():
