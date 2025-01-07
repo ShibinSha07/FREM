@@ -1,28 +1,32 @@
-import axios from 'axios';
 import React from 'react';
 import { View, Text, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 export default function WelcomeScreen({ navigation }) {
 
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity activeOpacity={1} style={styles.container} onPress={() => navigation.navigate('UserHome')}>
       <Image
         source={require('../assets/fire_logo.png')}
         style={styles.logo}
       />
-      <Text style={styles.title}>FREM</Text>
-      <Text style={styles.subtitle}>Fire and Rescue Emergency Management</Text>
+      <Text style={styles.title}>FREM</Text> 
 
-      <Button
-        title="Go to Home Screen"
-        onPress={() => navigation.navigate('UserHome')}
-      />
-
-    </View>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: 'white', flex: 1, justifyContent: 'center', alignItems: 'center' },
-  title: { fontSize: 50, fontWeight: 'bold', color: 'white' },
+  container: {
+    backgroundColor: 'white',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  title: {
+    marginTop: '200',
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: 'black'
+  },
 });

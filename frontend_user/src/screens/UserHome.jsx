@@ -3,13 +3,14 @@ import { StyleSheet, Text, View, Linking, Button, TouchableOpacity, Image, SafeA
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import axios from 'axios';
-
+import Layout from '../components/Layout';
+import { API_URL } from '../lib/api.js';
 const App = ({ navigation }) => {
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
 
-    
+
     const makeCall = async () => {
         try {
             // Step 1: Get the user's location
@@ -20,7 +21,7 @@ const App = ({ navigation }) => {
                 return;
             }
 
-            // const location = await Location.getCurrentPositionAsync({});
+            const location = await Location.getCurrentPositionAsync({});
             const { latitude, longitude } = location.coords;
 
             // Step 2: Format the data for the API
@@ -31,7 +32,7 @@ const App = ({ navigation }) => {
             };
 
             // Step 3: Send location to the database
-            const response = await axios.post("http://10.32.1.214:3001/incidents", requestData);
+            const response = await axios.post(`${API_URL}/incidents`, requestData);
             console.log(response)
             console.log("Incident created:", response.data);
 
@@ -68,42 +69,27 @@ const App = ({ navigation }) => {
 
     useEffect(() => {
         handleLocationFetch();
-    }, []);
+    },);
 
     return (
-        <SafeAreaView style={styles.container}>
-            {/* Header Section */}
-            <View style={styles.header}>
-                <Image
-                    source={require('../assets/fire_logo.png')}
-                    style={styles.logo}
-                />
-                <Text style={styles.title}>FREM</Text>
-            </View>
+        <Layout>
+            <View style={styles.container}>
 
-            {/* Location Button */}
-            <View style={styles.locationButtonContainer}>
-                <Button title="Turn on Location" color="blue" onPress={handleLocationFetch} />
-            </View>
+                {/* MapView */}
 
-            {/* Emergency Call Button */}
-            <TouchableOpacity style={styles.emergencyButton} onPress={makeCall}>
-                <Text style={styles.emergencyButtonText}>Emergency Call</Text>
-            </TouchableOpacity>
-
-            {/* MapView */}
-
-            <View style={styles.mapContainer}>
-                <MapView
-                    style={styles.map}
-                    initialRegion={{
-                        latitude: location ? location.coords.latitude : 10.5545,
-                        longitude: location ? location.coords.longitude : 76.2247,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    }}
-                    region={
-                        location
+                <View style={styles.mapContainer}>
+                    <MapView
+                     
+                     
+                     style={styles.map}
+                     initialRegion={{
+                         latitude: location ? location.coords.latitude : 10.5545,
+                         longitude: location ? location.coords.longitude : 76.2247,
+                         latitudeDelta: 0.0922,
+                         longitudeDelta: 0.0421,
+                        }}
+                        region={
+                            location
                             ? {
                                 latitude: location.coords.latitude,
                                 longitude: location.coords.longitude,
@@ -111,8 +97,13 @@ const App = ({ navigation }) => {
                                 longitudeDelta: 0.01,
                             }
                             : null
-                    }
-                >
+                        }
+                        >
+                    
+                    {/* Emergency Call Button */}
+                    <TouchableOpacity style={styles.emergencyButton} onPress={makeCall}>
+                        <Text style={styles.emergencyButtonText}>Emergency Call</Text>
+                    </TouchableOpacity>
                     {/* User Location Marker */}
                     {location && (
                         <Marker
@@ -136,14 +127,15 @@ const App = ({ navigation }) => {
                     <Text style={styles.emergencyButtonText}>Locate Fire Vehicle</Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </View>
+        </Layout >
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#121212',
+        // backgroundColor: '#121212',
     },
     header: {
         flexDirection: 'row',
@@ -159,7 +151,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: 'white',
+        // color: 'white',
     },
     locationButtonContainer: {
         paddingHorizontal: 20,
