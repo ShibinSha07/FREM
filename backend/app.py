@@ -100,14 +100,15 @@ def allocate_vehicle():
 
 @app.route('/<int:vehicle_id>/allocated', methods=['GET'])
 def check_allocation(vehicle_id):
-    # Query the Allocation table for the given vehicle_id
-    allocation = Allocation.query.filter_by(vehicle_id=vehicle_id).first()
+    # Query the Allocation table and join with Incident table to get location
+    allocation = db.session.query(Allocation, Incident).join(Incident, Allocation.incident_id == Incident.id).filter(Allocation.vehicle_id == vehicle_id).first()
 
     if allocation:
-        # If an allocation exists, return the associated incident ID
+        # If an allocation exists, return the associated location
+        incident = allocation[1]  # allocation[1] is the Incident object from the join
         return jsonify({
             "allocated": True,
-            "incident_id": allocation.incident_id
+            "location": incident.location
         }), 200
     else:
         # If no allocation exists, return a message indicating no allocation
@@ -115,6 +116,25 @@ def check_allocation(vehicle_id):
             "allocated": False,
             "message": f"Vehicle {vehicle_id} is not allocated to any incident."
         }), 200
+
+@app.route('/allocation/<int:vehicle_id>', methods=['DELETE'])
+def delete_allocation(vehicle_id):
+    try:
+        # Find the allocation for the given vehicle_id
+        allocation = Allocation.query.filter_by(vehicle_id=vehicle_id).first()
+
+        if not allocation:
+            return jsonify({"message": f"No allocation found for vehicle {vehicle_id}"}), 404
+
+        # Delete the allocation
+        db.session.delete(allocation)
+        db.session.commit()
+
+        return jsonify({"message": f"Allocation for vehicle {vehicle_id} deleted successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Failed to delete allocation", "details": str(e)}), 500
+
 
 @app.route('/allocation', methods=['GET'])
 def get_allocations():
