@@ -95,8 +95,8 @@ export default function LocateScreen({ navigation }) {
 
           {vehicleLocation && (
             <Marker coordinate={vehicleLocation} title="Vehicle">
-              <Image source={require('../assets/fire_vehicle.png')}
-                style={{ width: 60, height: 60 }}
+              <Image source={require('../assets/fire_truck.png')}
+                style={{ width: 40, height: 40 }}
                 resizeMode="contain"
               />
             </Marker>
@@ -105,8 +105,8 @@ export default function LocateScreen({ navigation }) {
           {routeCoordinates.length > 0 && (
             <Polyline
               coordinates={routeCoordinates}
-              strokeWidth={5}
-              strokeColor="blue"
+              strokeWidth={6}
+              strokeColor='#0075FE'
             />
           )}
         </MapView>
