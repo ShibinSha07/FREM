@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Alert } from 'react-native';
+import { StyleSheet, View, Alert, Image } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import axios from 'axios';
 import polyline from '@mapbox/polyline';
@@ -85,7 +85,12 @@ export default function LocateScreen() {
           region={region}
           onRegionChangeComplete={setRegion}
         >
-          <Marker coordinate={vehicleLocation} title="Vehicle Location" />
+          <Marker coordinate={vehicleLocation} title="Vehicle">
+              <Image source={require('../assets/fire_truck.png')}
+                style={{ width: 40, height: 40 }}
+                resizeMode="contain"
+              />
+            </Marker>
 
           {incidentLocation && (
             <Marker coordinate={incidentLocation} title="Incident Location" />

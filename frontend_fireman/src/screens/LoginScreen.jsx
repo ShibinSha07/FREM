@@ -29,7 +29,7 @@ export default function LoginPage({ navigation }) {
       setLoading(false);
       if (email === 'user@gmail.com' && password === 'password') {
         Alert.alert('Success', 'Login successful!');
-        // navigation.navigate('UserHome');
+        navigation.navigate('HomeScreen');
       } else {
         Alert.alert('Error', 'Invalid email or password.');
       }
@@ -62,8 +62,8 @@ export default function LoginPage({ navigation }) {
         />
         <TouchableOpacity
           style={styles.button}
-          // onPress={handleLogin}
-          onPress={() => navigation.navigate('HomeScreen')}
+          onPress={handleLogin}
+          // onPress={() => navigation.navigate('HomeScreen')}
           disabled={loading}
         >
           {loading ? (

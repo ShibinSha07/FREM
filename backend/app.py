@@ -164,5 +164,8 @@ def get_allocations():
 #     db.create_all()
 
 if __name__ == '__main__':
-    app.run(debug=True, host="10.32.1.214", port=3001)
+    app.run(debug=True, host="192.168.136.49", port=3001)
 #ipconfig will change each lap.so check it.
+
+
+# bassam phone : 192.168.136.49
