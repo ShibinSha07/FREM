@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import axios from 'axios';
 import polyline from '@mapbox/polyline';
 import * as Location from 'expo-location';
 import Layout from '../components/Layout';
 
-export default function LocateScreen ({ navigation }) {
+export default function LocateScreen({ navigation }) {
   const [region, setRegion] = useState({
     latitude: 10.5545,
     longitude: 76.2247,
@@ -61,7 +61,7 @@ export default function LocateScreen ({ navigation }) {
       // console.log(location)
 
       const { latitude, longitude } = location.coords;
-    //   console.log(latitude, longitude)
+      //   console.log(latitude, longitude)
 
       setVehicleLocation({ latitude, longitude });
     } catch (error) {
@@ -85,27 +85,32 @@ export default function LocateScreen ({ navigation }) {
 
   return (
     <Layout>
-    <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        region={region}
-        onRegionChangeComplete={setRegion}
-      >
-        <Marker coordinate={buildingLocation} title="Building" />
-        
-        {vehicleLocation && (
-          <Marker coordinate={vehicleLocation} title="Vehicle" />
-        )}
+      <View style={styles.container}>
+        <MapView
+          style={styles.map}
+          region={region}
+          onRegionChangeComplete={setRegion}
+        >
+          <Marker coordinate={buildingLocation} title="Building" />
 
-        {routeCoordinates.length > 0 && (
-          <Polyline
-            coordinates={routeCoordinates}
-            strokeWidth={5}
-            strokeColor="blue"
-          />
-        )}
-      </MapView>
-    </View>
+          {vehicleLocation && (
+            <Marker coordinate={vehicleLocation} title="Vehicle">
+              <Image source={require('../assets/fire_truck.png')}
+                style={{ width: 40, height: 40 }}
+                resizeMode="contain"
+              />
+            </Marker>
+          )}
+
+          {routeCoordinates.length > 0 && (
+            <Polyline
+              coordinates={routeCoordinates}
+              strokeWidth={6}
+              strokeColor='#0075FE'
+            />
+          )}
+        </MapView>
+      </View>
     </Layout>
   );
 }

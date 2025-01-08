@@ -76,58 +76,59 @@ const App = ({ navigation }) => {
             <View style={styles.container}>
 
                 {/* MapView */}
-
                 <View style={styles.mapContainer}>
-                    <MapView
-                     
-                     
-                     style={styles.map}
-                     initialRegion={{
-                         latitude: location ? location.coords.latitude : 10.5545,
-                         longitude: location ? location.coords.longitude : 76.2247,
-                         latitudeDelta: 0.0922,
-                         longitudeDelta: 0.0421,
-                        }}
-                        region={
-                            location
-                            ? {
-                                latitude: location.coords.latitude,
-                                longitude: location.coords.longitude,
-                                latitudeDelta: 0.01,
-                                longitudeDelta: 0.01,
-                            }
-                            : null
-                        }
-                        >
-                    
+
                     {/* Emergency Call Button */}
                     <TouchableOpacity style={styles.emergencyButton} onPress={makeCall}>
                         <Text style={styles.emergencyButtonText}>Emergency Call</Text>
                     </TouchableOpacity>
-                    {/* User Location Marker */}
-                    {location && (
-                        <Marker
-                            coordinate={{
-                                latitude: location.coords.latitude,
-                                longitude: location.coords.longitude,
-                            }}
-                            title="Your Location"
-                        />
-                    )}
-                </MapView>
-            </View>
+                    <MapView
 
-            {/* Action Buttons */}
-            <View style={styles.buttonGroup}>
-                <TouchableOpacity style={styles.mapButton}>
-                    <Text style={styles.emergencyButtonText}>Nearest Fire Stations</Text>
-                </TouchableOpacity>
 
-                <TouchableOpacity style={styles.locateButton} onPress={() => navigation.navigate('Locate')}>
-                    <Text style={styles.emergencyButtonText}>Locate Fire Vehicle</Text>
-                </TouchableOpacity>
+                        style={styles.map}
+                        initialRegion={{
+                            latitude: location ? location.coords.latitude : 10.5545,
+                            longitude: location ? location.coords.longitude : 76.2247,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421,
+                        }}
+                        region={
+                            location
+                                ? {
+                                    latitude: location.coords.latitude,
+                                    longitude: location.coords.longitude,
+                                    latitudeDelta: 0.01,
+                                    longitudeDelta: 0.01,
+                                }
+                                : null
+                        }
+                    >
+
+
+                        {/* User Location Marker */}
+                        {location && (
+                            <Marker
+                                coordinate={{
+                                    latitude: location.coords.latitude,
+                                    longitude: location.coords.longitude,
+                                }}
+                                title="Your Location"
+                            />
+                        )}
+                    </MapView>
+                </View>
+
+                {/* Action Buttons */}
+                <View style={styles.buttonGroup}>
+                    <TouchableOpacity style={styles.mapButton}>
+                        <Text style={styles.emergencyButtonText}>Nearest Fire Stations</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.locateButton} onPress={() => navigation.navigate('Locate')}>
+                        <Text style={styles.emergencyButtonText}>Locate Fire Vehicle</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
         </Layout >
     );
 };
