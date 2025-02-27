@@ -13,9 +13,9 @@ const App = ({ navigation }) => {
 
     const makeCall = async () => {
         try {
+            console.log("making call")
             // Step 1: Get the user's location
             const { status } = await Location.requestForegroundPermissionsAsync();
-
             if (status !== "granted") {
                 Alert.alert("Permission denied", "Location permission is required.");
                 return;
@@ -35,6 +35,7 @@ const App = ({ navigation }) => {
             const response = await axios.post(`${API_URL}/incidents`, requestData);
             console.log(response)
             console.log("Incident created:", response.data);
+            console.log("incident added")
 
             // Step 4: Make the call
             const phoneNumber = "tel:8281396739";
