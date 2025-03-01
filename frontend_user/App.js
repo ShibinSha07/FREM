@@ -6,6 +6,7 @@ import WelcomeScreen from './src/screens/WelcomePage';
 import UserHome from './src/screens/UserHome'
 import LocateScreen from './src/screens/LocateScreen';
 
+import './global.css'
 
 const Stack = createNativeStackNavigator();
 
