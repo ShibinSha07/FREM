@@ -24,6 +24,18 @@ export const SocketProvider = ({ children }) => {
         };
     }, [])
 
+    // useEffect(() => {
+    //     const dummyData = {
+    //         id: "123",
+    //         title: "Fire Alert",
+    //         location: "Main Street, NY",
+    //         severity: "High",
+    //         description: "A fire has broken out in a residential building.",
+    //     };
+    //     setPopup(dummyData);
+    // }, []);
+
+
     return (
         <SocketContext.Provider value={{ incidents, popup, setPopup }}>
             {children}

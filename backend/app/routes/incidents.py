@@ -6,7 +6,6 @@ incidents_bp = Blueprint('incidents', __name__)
 
 @incidents_bp.route('/', methods=['POST'])
 def create_incident():
-    """Create a new incident and assign a vehicle."""
     data = request.json
     new_incident = Incident(
         location=data['location'],  
@@ -15,12 +14,10 @@ def create_incident():
     db.session.add(new_incident)
     db.session.commit()
 
-    # Assign a vehicle (default vehicle ID = 1 for now)
     new_allocation = Allocation(vehicle_id=1, incident_id=new_incident.id)
     db.session.add(new_allocation)
     db.session.commit()
 
-    # Notify via WebSocket
     socketio.emit("new_incident", {
         "incident_id": new_incident.id,
         "location": new_incident.location,
@@ -34,7 +31,6 @@ def create_incident():
 
 @incidents_bp.route('/', methods=['GET'])
 def get_incidents():
-    """Retrieve all incidents."""
     incidents = Incident.query.all()
     return jsonify([{
         "id": inc.id,
