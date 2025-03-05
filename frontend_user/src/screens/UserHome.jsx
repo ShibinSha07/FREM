@@ -20,7 +20,8 @@ const UserHome = ({ navigation }) => {
 
             const { latitude, longitude } = location.coords;
 
-            const locationString = `POINT(${longitude} ${latitude})`;
+            const locationString = `${longitude} ${latitude}`;
+            // const locationString = `POINT(${longitude} ${latitude})`;
             const requestData = {
                 location: locationString,
                 status: "pending",
@@ -40,7 +41,7 @@ const UserHome = ({ navigation }) => {
         catch (error) {
             console.error("An error occurred", error);
             Alert.alert("Error", "Something went wrong. Please try again.");
-        }
+        }   
     };
 
     useEffect(() => {

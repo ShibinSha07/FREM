@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import io from "socket.io-client";
+import { API_URL } from "../../../api";
 
 const socket = io("http://127.0.0.1:3001");
 
@@ -11,6 +12,21 @@ export const SocketProvider = ({ children }) => {
 
     const [incidents, setIncidents] = useState([])
     const [popup, setPopup] = useState(null)
+    fetch(`${API_URL}/endpoint`)
+
+    useEffect(() => {
+        const fetchIncidents = async () => {
+            try {
+                const response = await fetch(`${API_URL}/incidents`)
+                const data = await response.json();
+                setIncidents(data)
+            } catch (error) {
+                console.error("error in fetching the incidents", error)
+            }
+        }
+
+        fetchIncidents();
+    }, [])
 
     useEffect(() => {
         socket.on("new_incident", (data) => {
@@ -23,6 +39,10 @@ export const SocketProvider = ({ children }) => {
             socket.off("new_incident");
         };
     }, [])
+
+    console.log(incidents)
+
+
 
     // useEffect(() => {
     //     const dummyData = {
