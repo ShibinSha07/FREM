@@ -16,7 +16,7 @@ export const SocketProvider = ({ children }) => {
     useEffect(() => {
         const fetchIncidents = async () => {
             try {
-                const response = await fetch(`${API_URL}/incidents`)
+                const response = await fetch(`${API_URL}/calls`)
                 const data = await response.json();
                 setIncidents(data)
             } catch (error) {
@@ -28,14 +28,14 @@ export const SocketProvider = ({ children }) => {
     }, [])
 
     useEffect(() => {
-        socket.on("new_incident", (data) => {
+        socket.on("new_call", (data) => {
             console.log('new incident recieved', data)
             setIncidents((prev) => [...prev, data]);
             setPopup(data);
         })
 
         return () => {
-            socket.off("new_incident");
+            socket.off("new_call");
         };
     }, [])
 

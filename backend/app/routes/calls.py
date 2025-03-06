@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from datetime import datetime
-from app import db
+from app import db, socketio
 from app.models import Call
 
 calls_bp = Blueprint('calls', __name__)
@@ -27,9 +27,7 @@ def get_call(call_id):
 
 @calls_bp.route('/', methods=['POST'])
 def create_call():
-    print("backend hit")
     data = request.get_json()
-    print(data)
     coordinates = data.get('coordinates')
     place = data.get('place')
     incident_id = data.get('incident_id', None)
@@ -47,6 +45,8 @@ def create_call():
     db.session.add(new_call)
     db.session.commit()
 
+    socketio.emit("new_call", call_to_dict(new_call))
+     
     return jsonify(call_to_dict(new_call)), 201
 
 @calls_bp.route('/<int:call_id>', methods=['DELETE'])

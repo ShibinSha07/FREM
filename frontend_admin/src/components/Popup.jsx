@@ -14,20 +14,24 @@ const Popup = () => {
                 onRequestClose={() => setPopup(null)}
                 style={{
                     overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
-                    content: { width: "600px", height: "600px", margin: "auto", padding: "20px", borderRadius: "10px", display: "flex", flexDirection: "column", justifyContent: "space-between" }
+                    content: { width: "600px", height: "650px", margin: "auto", padding: "20px", borderRadius: "10px", display: "flex", flexDirection: "column", justifyContent: "space-between" }
                 }}
             >
                 <h2 className='text-2xl font-bold text-center mb-4'>🚨 Emergency Alert</h2>
 
                 {popup && (
                     <>
-                        <p className='mb-4'><strong>Location: </strong>{popup.location}</p>
-                        <textarea
-                            rows={3}
-                            cols={50}
-                            placeholder="Type your message here..."
-                            className="border border-gray-400 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent mb-4"
-                        />
+                        <div className='flex flex-col space-y-4 mb-8'>
+                            <p><strong>Location: </strong>{popup.place}</p>
+                            <p><strong>Coordinates: </strong>{popup.coordinates}</p>
+                            <textarea
+                                rows={3}
+                                cols={50}
+                                placeholder="Type your message here..."
+                                className="border border-gray-400 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                            />
+                            <button className='bg-green-500 text-white p-2 rounded-md'>Accept</button>
+                        </div>
 
                         <h2 className='text-xl font-bold mb-2'>Active Incidents</h2>
 
@@ -58,10 +62,7 @@ const Popup = () => {
                             </table>
                         </div>
 
-                        <div className='flex justify-between mt-auto'>
-                            <button className='bg-red-500 p-2 rounded-md text-white' onClick={() => setPopup(null)}>Close</button>
-                            <button className='bg-green-500 text-white p-2 rounded-md'>Accept</button>
-                        </div>
+                        <button className='bg-red-500 p-2 rounded-md text-white m-auto w-40' onClick={() => setPopup(null)}>Close</button>
                     </>
                 )}
 

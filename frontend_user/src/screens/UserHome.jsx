@@ -64,8 +64,6 @@ const UserHome = ({ navigation }) => {
                 incident_id: null,
             };
 
-            console.log("sending request:", requestData);
-
             const response = await axios.post(`${API_URL}/calls`, requestData);
             console.log("Incident created:", response.data);
 
@@ -84,14 +82,14 @@ const UserHome = ({ navigation }) => {
                     <Text className="text-center">Save Your life</Text>
                 </View>
 
-                <View className="w-full h-96 bg-gray-200 mb-20 rounded-md">
+                <View className="w-full h-2/3  rounded-md">
                     {loading ? (
-                        <View className="flex-1 justify-center items-center ">
+                        <View className="flex-1 justify-center items-center bg-gray-200">
                             <ActivityIndicator size="large" color="#ff5733" />
                         </View>
                     ) : (
                         <>
-                            <View className="w-full h-96">
+                            <View className="w-full h-96 mb-20 bg-white">
                                 <MapView
                                     style={styles.map}
                                     initialRegion={{
@@ -122,35 +120,37 @@ const UserHome = ({ navigation }) => {
                                     )}
                                 </MapView>
                             </View>
+
+                            <View className="flex-row justify-between gap-x-2 mb-2">
+                                <TouchableOpacity className="bg-blue-600 py-4 rounded-md flex-1">
+                                    <Text className="text-white text-center text-lg font-bold">
+                                        Nearest Fire Stations
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    className="bg-green-600 py-4 rounded-md flex-1"
+                                    onPress={() => navigation.navigate('Locate')}
+                                >
+                                    <Text className="text-white text-center text-lg font-bold">
+                                        Locate Fire Vehicle
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <TouchableOpacity
+                                className="bg-red-600 py-4 rounded-md"
+                                onPress={makeCall}
+                            >
+                                <Text className="text-white text-center text-lg font-bold">
+                                    Emergency Call
+                                </Text>
+                            </TouchableOpacity>
                         </>
                     )}
                 </View>
 
-                <View className="flex-row justify-between gap-x-2 mb-2">
-                    <TouchableOpacity className="bg-blue-600 py-4 rounded-md flex-1">
-                        <Text className="text-white text-center text-lg font-bold">
-                            Nearest Fire Stations
-                        </Text>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity
-                        className="bg-green-600 py-4 rounded-md flex-1"
-                        onPress={() => navigation.navigate('Locate')}
-                    >
-                        <Text className="text-white text-center text-lg font-bold">
-                            Locate Fire Vehicle
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-
-                <TouchableOpacity
-                    className="bg-red-600 py-4 rounded-md"
-                    onPress={makeCall}
-                >
-                    <Text className="text-white text-center text-lg font-bold">
-                        Emergency Call
-                    </Text>
-                </TouchableOpacity>
 
             </View>
         </Layout >

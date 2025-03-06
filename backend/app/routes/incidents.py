@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from .. import db, socketio
+from .. import db
 from ..models import Incident, Allocation
 
 incidents_bp = Blueprint('incidents', __name__)
@@ -17,13 +17,6 @@ def create_incident():
     new_allocation = Allocation(vehicle_id=1, incident_id=new_incident.id)
     db.session.add(new_allocation)
     db.session.commit()
-
-    socketio.emit("new_incident", {
-        "incident_id": new_incident.id,
-        "location": new_incident.location,
-        "status": new_incident.status,
-        "vehicle_id": new_allocation.vehicle_id
-    })
 
     return jsonify({"message": "Incident created and vehicle allocated", 
                     "incident_id": new_incident.id, 
