@@ -9,49 +9,8 @@ import { API_URL } from '../lib/api.js';
 const UserHome = ({ navigation }) => {
 
     const [location, setLocation] = useState(null);
+    const [place, setPlace] = useState("Unknown location")
     const [loading, setLoading] = useState(true);
-
-    const makeCall = async () => {
-        try {
-            console.log("making call")
-
-            const phoneNumber = "tel:8281396739";
-            const supported = await Linking.canOpenURL(phoneNumber);
-
-            const { latitude, longitude } = location.coords;
-
-            const geocodeUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
-
-            const geocodeResponse = await axios.get(geocodeUrl, {
-                headers: { "User-Agent": "YourAppName/1.0 (frem@gmail.com)" },
-            });
-
-            const placeName = geocodeResponse.data.display_name || "Unknown Location";
-            console.log("Location Name:", placeName);
-
-            const locationString = `${longitude} ${latitude}`;
-            // const locationString = `POINT(${longitude} ${latitude})`;
-            const requestData = {
-                location: locationString,
-                status: "pending",
-            };
-
-            console.log(requestData)
-
-            const response = await axios.post(`${API_URL}/incidents`, requestData);
-            console.log("Incident created:", response.data);
-
-            if (!supported) {
-                Alert.alert("Error", "Phone call not supported on this device.");
-            } else {
-                await Linking.openURL(phoneNumber);
-            }
-        }
-        catch (error) {
-            console.error("An error occurred", error.message);
-            Alert.alert("Error", "Something went wrong. Please try again.");
-        }
-    };
 
     useEffect(() => {
         const fetchLocation = async () => {
@@ -64,14 +23,59 @@ const UserHome = ({ navigation }) => {
 
                 let currentLocation = await Location.getCurrentPositionAsync({});
                 setLocation(currentLocation);
+
+                if (currentLocation && currentLocation.coords) {
+                    const { latitude, longitude } = currentLocation.coords;
+                    const geocodeUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+
+                    const geocodeResponse = await axios.get(geocodeUrl, {
+                        headers: { "User-Agent": "YourAppName/1.0 (frem@gmail.com)" },
+                    });
+
+                    setPlace(geocodeResponse.data.display_name || "Unknown Location");
+                }
+
                 setLoading(false);
             } catch (error) {
-                console.error("Error fetching location:", error);
+                console.error("Error fetching location:", error.message);
             }
         };
 
         fetchLocation();
     }, []);
+
+    const makeCall = async () => {
+        try {
+            console.log("making call")
+
+            const phoneNumber = "tel:8281396739";
+            const supported = await Linking.canOpenURL(phoneNumber);
+
+            if (!location) {
+                Alert.alert("Error", "Location is not available yet.");
+                return;
+            }
+
+            const { latitude, longitude } = location.coords;
+
+            const requestData = {
+                coordinates: `${longitude} ${latitude}`,
+                place: place,
+                incident_id: null,
+            };
+
+            console.log("sending request:", requestData);
+
+            const response = await axios.post(`${API_URL}/calls`, requestData);
+            console.log("Incident created:", response.data);
+
+            await Linking.openURL(phoneNumber);
+        }
+        catch (error) {
+            console.error("An error occurred", error.message);
+            Alert.alert("Error", "Something went wrong. Please try again.");
+        }
+    };
 
     return (
         <Layout>

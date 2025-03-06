@@ -19,10 +19,12 @@ def create_app():
     from .routes.incidents import incidents_bp
     from .routes.vehicles import vehicles_bp
     from .routes.allocations import allocations_bp
+    from .routes.calls import calls_bp
     from app import models, routes
 
     app.register_blueprint(incidents_bp, url_prefix='/incidents')
     app.register_blueprint(vehicles_bp, url_prefix='/vehicles')
     app.register_blueprint(allocations_bp, url_prefix='/allocations')
+    app.register_blueprint(calls_bp, url_prefix='/calls')
 
     return app

@@ -18,15 +18,6 @@ class Call(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'))
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'coordinates': self.coordinates,
-            'place': self.place,
-            'timestamp': self.timestamp.isoformat() if self.timestamp else None,
-            'incident_id': self.incident_id,
-        }
-
 class Vehicle(db.Model):
     __tablename__ = 'vehicle'
     id = db.Column(db.Integer, primary_key=True)

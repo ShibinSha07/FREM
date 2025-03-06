@@ -5,24 +5,33 @@ from app.models import Call
 
 calls_bp = Blueprint('calls', __name__)
 
-# GET all calls
-@calls_bp.route('/calls', methods=['GET'])
+# covert to dictionary
+def call_to_dict(call):
+    return {
+        'id': call.id,
+        'coordinates': call.coordinates,
+        'place': call.place,
+        'timestamp': call.timestamp.isoformat() if call.timestamp else None,
+        'incident_id': call.incident_id,
+    }
+    
+@calls_bp.route('/', methods=['GET'])
 def get_calls():
     calls = Call.query.all()
-    return jsonify([call.to_dict() for call in calls]), 200
+    return jsonify([call_to_dict(call) for call in calls]), 200
 
-# GET a single call by id
-@calls_bp.route('/calls/<int:call_id>', methods=['GET'])
+@calls_bp.route('/<int:call_id>', methods=['GET'])
 def get_call(call_id):
     call = Call.query.get_or_404(call_id)
-    return jsonify(call.to_dict()), 200
+    return jsonify(call_to_dict(call)), 200
 
-# POST a new call with incident_id optional
-@calls_bp.route('/calls', methods=['POST'])
+@calls_bp.route('/', methods=['POST'])
 def create_call():
+    print("backend hit")
     data = request.get_json()
+    print(data)
     coordinates = data.get('coordinates')
-    place = data.get('place')  # Get the 'place' value from the request
+    place = data.get('place')
     incident_id = data.get('incident_id', None)
 
     if not coordinates:
@@ -30,19 +39,17 @@ def create_call():
 
     new_call = Call(
         coordinates=coordinates,
-        place=place,  # Set the place attribute on the model
+        place=place,
         incident_id=incident_id,
-        timestamp=datetime.utcnow()  # This can be omitted if your model has a default
+        timestamp=datetime.utcnow()
     )
 
     db.session.add(new_call)
     db.session.commit()
 
-    return jsonify(new_call.to_dict()), 201
+    return jsonify(call_to_dict(new_call)), 201
 
-
-# DELETE a call by id
-@calls_bp.route('/calls/<int:call_id>', methods=['DELETE'])
+@calls_bp.route('/<int:call_id>', methods=['DELETE'])
 def delete_call(call_id):
     call = Call.query.get_or_404(call_id)
     db.session.delete(call)
@@ -50,10 +57,10 @@ def delete_call(call_id):
     return jsonify({'message': 'Call deleted successfully'}), 200
 
 
-@calls_bp.route('/calls/<int:call_id>/incident', methods=['PUT'])
+@calls_bp.route('/<int:call_id>/incident', methods=['PUT'])
 def update_call_incident(call_id):
     data = request.get_json()
-    # Validate that incident_id is provided
+
     if 'incident_id' not in data:
         return jsonify({'error': 'incident_id is required'}), 400
 
@@ -61,4 +68,4 @@ def update_call_incident(call_id):
     call.incident_id = data['incident_id']
     db.session.commit()
     
-    return jsonify(call.to_dict()), 200
+    return jsonify(call_to_dict(call)), 200
