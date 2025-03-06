@@ -22,6 +22,7 @@ def create_app():
     from .routes.incidents import incidents_bp
     from .routes.vehicles import vehicles_bp
     from .routes.allocations import allocations_bp
+    from app import models, routes
 
     app.register_blueprint(incidents_bp, url_prefix='/incidents')
     app.register_blueprint(vehicles_bp, url_prefix='/vehicles')
