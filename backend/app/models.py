@@ -1,8 +1,6 @@
 from . import db
 from datetime import datetime
 
-
-
 class Incident(db.Model):
     __tablename__ = 'incident'
     id = db.Column(db.Integer, primary_key=True)
@@ -38,5 +36,3 @@ class Allocation(db.Model):
     __tablename__ = 'allocation'
     vehicle_id = db.Column(db.Integer, db.ForeignKey('vehicle.id'), primary_key=True)
     incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'), primary_key=True)
-    
-    

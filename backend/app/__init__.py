@@ -4,16 +4,13 @@ from flask_cors import CORS
 from flask_socketio import SocketIO
 from .config import Config
 
-# Initialize Extensions
 db = SQLAlchemy()
 socketio = SocketIO(cors_allowed_origins="*")
 
 def create_app():
-    """Application factory for Flask."""
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Initialize Plugins
     db.init_app(app)
     socketio.init_app(app)
     CORS(app)

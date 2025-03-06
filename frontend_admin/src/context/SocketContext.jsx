@@ -12,7 +12,6 @@ export const SocketProvider = ({ children }) => {
 
     const [incidents, setIncidents] = useState([])
     const [popup, setPopup] = useState(null)
-    fetch(`${API_URL}/endpoint`)
 
     useEffect(() => {
         const fetchIncidents = async () => {
@@ -39,10 +38,6 @@ export const SocketProvider = ({ children }) => {
             socket.off("new_incident");
         };
     }, [])
-
-    console.log(incidents)
-
-
 
     // useEffect(() => {
     //     const dummyData = {

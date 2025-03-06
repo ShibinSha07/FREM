@@ -6,7 +6,6 @@ allocations_bp = Blueprint('allocations', __name__)
 
 @allocations_bp.route('/', methods=['POST'])
 def allocate_vehicle():
-    """Assign a vehicle to an incident."""
     data = request.json
     allocation = Allocation(
         vehicle_id=data['vehicle_id'],
@@ -18,7 +17,6 @@ def allocate_vehicle():
 
 @allocations_bp.route('/<int:vehicle_id>', methods=['DELETE'])
 def delete_allocation(vehicle_id):
-    """Remove an allocation for a vehicle."""
     allocation = Allocation.query.filter_by(vehicle_id=vehicle_id).first()
     if not allocation:
         return jsonify({"message": f"No allocation found for vehicle {vehicle_id}"}), 404
@@ -29,7 +27,6 @@ def delete_allocation(vehicle_id):
 
 @allocations_bp.route('/<int:vehicle_id>/allocated', methods=['GET'])
 def check_allocation(vehicle_id):
-    """Check if a vehicle is allocated to an incident."""
     allocation = db.session.query(Allocation, Incident).join(
         Incident, Allocation.incident_id == Incident.id
     ).filter(Allocation.vehicle_id == vehicle_id).first()

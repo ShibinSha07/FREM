@@ -6,7 +6,6 @@ vehicles_bp = Blueprint('vehicles', __name__)
 
 @vehicles_bp.route('/', methods=['POST'])
 def create_vehicle():
-    """Register a new vehicle."""
     data = request.json
     new_vehicle = Vehicle(status=data['status'])
     db.session.add(new_vehicle)
@@ -15,7 +14,6 @@ def create_vehicle():
 
 @vehicles_bp.route('/', methods=['GET'])
 def get_vehicles():
-    """Retrieve all vehicles."""
     vehicles = Vehicle.query.all()
     return jsonify([{
         "id": veh.id,

@@ -20,6 +20,15 @@ const UserHome = ({ navigation }) => {
 
             const { latitude, longitude } = location.coords;
 
+            const geocodeUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+
+            const geocodeResponse = await axios.get(geocodeUrl, {
+                headers: { "User-Agent": "YourAppName/1.0 (frem@gmail.com)" },
+            });
+
+            const placeName = geocodeResponse.data.display_name || "Unknown Location";
+            console.log("Location Name:", placeName);
+
             const locationString = `${longitude} ${latitude}`;
             // const locationString = `POINT(${longitude} ${latitude})`;
             const requestData = {
@@ -39,9 +48,9 @@ const UserHome = ({ navigation }) => {
             }
         }
         catch (error) {
-            console.error("An error occurred", error);
+            console.error("An error occurred", error.message);
             Alert.alert("Error", "Something went wrong. Please try again.");
-        }   
+        }
     };
 
     useEffect(() => {
