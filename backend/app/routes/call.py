@@ -21,15 +21,15 @@ def get_call(call_id):
 @calls_bp.route('/calls', methods=['POST'])
 def create_call():
     data = request.get_json()
-    location = data.get('location')
+    coordinates = data.get('coordinates')
     place = data.get('place')  # Get the 'place' value from the request
     incident_id = data.get('incident_id', None)
 
-    if not location:
-        return jsonify({'error': 'Location is required'}), 400
+    if not coordinates:
+        return jsonify({'error': 'coordinates is required'}), 400
 
     new_call = Call(
-        location=location,
+        coordinates=coordinates,
         place=place,  # Set the place attribute on the model
         incident_id=incident_id,
         timestamp=datetime.utcnow()  # This can be omitted if your model has a default
