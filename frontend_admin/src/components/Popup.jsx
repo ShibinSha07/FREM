@@ -5,7 +5,6 @@ import { useSocket } from '../context/SocketContext'
 const Popup = () => {
 
     const { popup, setPopup, incidents } = useSocket();
-    console.log(popup)
 
     return (
         <div>

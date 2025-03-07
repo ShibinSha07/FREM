@@ -18,6 +18,14 @@ class Call(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'))
 
+class Fireman(db.Model):
+    __tablename__ = 'fireman'
+    id = db.Column(db.Integer, primary_key=True)
+    fid = db.Column(db.String(50))
+    name = db.Column(db.String(250)) 
+    contact = db.Column(db.String(15))
+    status = db.Column(db.String(50), nullable=False)
+    
 class Vehicle(db.Model):
     __tablename__ = 'vehicle'
     id = db.Column(db.Integer, primary_key=True)

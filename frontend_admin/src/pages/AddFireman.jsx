@@ -1,24 +1,33 @@
 import React, { useState } from 'react';
+import { API_URL } from '../../../api';
+import axios from 'axios';
 
 const AddFireman = () => {
 
     const [formData, setFormData] = useState({
         fid: '',
         name: '',
-        age: '',
-        station: '',
         contact: '',
+        status: 'off-duty',
     });
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Fireman Data:', formData);
-        // Add logic to send data to backend
-        setFormData({ name: '', age: '', station: '', contact: '' }); // Reset form
+
+        try {
+            const response = await axios.post(`${API_URL}/fireman/`, formData)
+            if (response.status === 201) {
+                setFormData({ fid: '', name: '', contact: '', status: 'off-duty' });
+            } else {
+                console.error('Failed to add fireman');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     return (
@@ -57,10 +66,6 @@ const AddFireman = () => {
                         <label className='block font-semibold mb-1'>Age</label>
                         <input
                             type='number'
-                            name='age'
-                            value={formData.age}
-                            onChange={handleChange}
-                            required
                             className='w-full p-2 border border-gray-300 rounded'
                             placeholder='Enter age'
                         />
@@ -83,7 +88,7 @@ const AddFireman = () => {
                             placeholder='Enter State'
                         />
                     </div>
-                    
+
                     <div>
                         <label className='block font-semibold mb-1'>District</label>
                         <input
@@ -126,7 +131,7 @@ const AddFireman = () => {
                 </div>
 
                 <div className='w-96 bg-orange-500 mx-auto text-center text-white font-semibold p-2 rounded hover:bg-orange-600'>
-                    <button type='submit'>Add Fireman</button>
+                    <button type='submit' className='w-full'>Add Fireman</button>
                 </div>
             </form>
 
