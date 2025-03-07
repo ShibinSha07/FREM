@@ -8,6 +8,7 @@ import ActiveScreen from './src/screens/ActiveScreen';
 
 const Stack = createNativeStackNavigator();
 
+import './global.css'
 
 export default function App() {
   return (

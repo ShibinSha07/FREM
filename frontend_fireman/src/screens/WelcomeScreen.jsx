@@ -1,32 +1,20 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 
 export default function WelcomeScreen({ navigation }) {
-
-
   return (
-    <TouchableOpacity activeOpacity={1} style={styles.container} onPress={() => navigation.navigate('LoginScreen')}>
+    <TouchableOpacity
+      activeOpacity={1}
+      className="flex-1 bg-white justify-center items-center gap-y-52"
+      onPress={() => navigation.navigate('HomeScreen')}
+    >
       <Image
         source={require('../assets/fire_logo.png')}
-        style={styles.logo}
+        className="w-80 h-80"
       />
-      <Text style={styles.title}>FREM</Text> 
-
+      <Text className="text-6xl font-bold text-black">
+        FREM
+      </Text>
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'whigrayte',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  title: {
-    marginTop: '200',
-    fontSize: 40,
-    fontWeight: 'bold',
-    color: 'black'
-  },
-});
