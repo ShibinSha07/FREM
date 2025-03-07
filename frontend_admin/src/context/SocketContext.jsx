@@ -41,11 +41,8 @@ export const SocketProvider = ({ children }) => {
 
     // useEffect(() => {
     //     const dummyData = {
-    //         id: "123",
-    //         title: "Fire Alert",
-    //         location: "Main Street, NY",
-    //         severity: "High",
-    //         description: "A fire has broken out in a residential building.",
+    //         place: "Main Street, NY",
+    //         coordinates: "3849083 34980384"
     //     };
     //     setPopup(dummyData);
     // }, []);

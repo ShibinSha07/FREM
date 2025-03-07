@@ -65,7 +65,7 @@ const UserHome = ({ navigation }) => {
             };
 
             const response = await axios.post(`${API_URL}/calls`, requestData);
-            console.log("Incident created:", response.data);
+            console.log("call added:", response.data);
 
             await Linking.openURL(phoneNumber);
         }
