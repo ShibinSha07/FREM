@@ -66,8 +66,6 @@ const Popup = () => {
                     </>
                 )}
 
-
-
             </Modal>
         </div>
     )
