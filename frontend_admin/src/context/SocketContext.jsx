@@ -39,13 +39,13 @@ export const SocketProvider = ({ children }) => {
         };
     }, [])
 
-    // useEffect(() => {
-    //     const dummyData = {
-    //         place: "Main Street, NY",
-    //         coordinates: "3849083 34980384"
-    //     };
-    //     setPopup(dummyData);
-    // }, []);
+    useEffect(() => {
+        const dummyData = {
+            place: "Main Street, NY",
+            coordinates: "3849083 34980384"
+        };
+        setPopup(dummyData);
+    }, []);
 
 
     return (

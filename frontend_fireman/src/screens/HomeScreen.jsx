@@ -1,51 +1,22 @@
-import { StyleSheet, Text, TouchableOpacity,Image, View } from 'react-native';
+import { Text, TouchableOpacity, Image, View } from 'react-native';
 import React from 'react';
 import Layout from '../components/Layout';
 
 const HomeScreen = ({ navigation }) => {
+
     return (
         <Layout>
-            <View style={styles.container}>
-                <TouchableOpacity style={styles.task}>
-                    <Text style={styles.taskText}>No task</Text>
-                    <TouchableOpacity  onPress={() => navigation.navigate('ActiveScreen')}>
-                        <Image style={styles.reload} source={require('../assets/reload.png')}/>
+            <View className="flex-1 items-center p-4">
+                <Text>this is the HomeScreen</Text>
+                {/* <TouchableOpacity className="bg-gray-100 rounded-lg h-48 w-full p-4 shadow-md">
+                    <Text className="text-gray-800 text-lg font-bold">No task</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('ActiveScreen')}>
+                        <Image className="h-24 w-24 ml-24" source={require('../assets/reload.png')} />
                     </TouchableOpacity>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
         </Layout>
     );
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        // backgroundColor: '#f5f5f5', // Light gray background
-        padding: 16,
-    },
-    task: {
-        backgroundColor: '#f5f5f5', // White background for the task view
-        borderRadius: 10, // Rounded corners
-        height: 200,
-        width: '100%',
-        padding: 16, // Padding inside the task view
-        // shadowColor: '#000', // Shadow for elevation effect
-        // shadowOffset: { width: 0, height: 2 },
-        // shadowOpacity: 0.1,
-        // shadowRadius: 4,
-        elevation: 3, // Elevation for Android shadow
-    },
-    reload: {
-        height: 100,
-        width:100,
-        marginLeft: 100,
-    },
-    taskText: {
-        color: '#333', // Darker gray for text
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-});
