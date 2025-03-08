@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSocket } from '../context/SocketContext'
+import IncidentModal from '../components/IncidentModal';
 
 const Home = () => {
 
     const { incidents } = useSocket();
+    const [selectedIncident, setSelectedIncident] = useState(null)
 
     const acitveIncidents = incidents.filter(incident => incident.status === "pending")
 
@@ -22,8 +24,13 @@ const Home = () => {
                 <div className='grid md:grid-cols-3 gap-4'>
                     {acitveIncidents.length > 0 ? (
                         acitveIncidents.map((incident) => (
-                            <div className='border border-gray-300 rounded-md p-2 text-center'>
-                                <p>{incident.location}</p>
+                            <div
+                                key={incident.id}
+                                className='border border-gray-300 rounded-md p-4 hover:border-orange-500'
+                                onClick={() => setSelectedIncident(incident)}
+                            >
+                                <p><strong>Location: </strong>{incident.place}</p>
+                                <p><strong>Note: </strong>{incident.note}</p>
                             </div>
                         ))
                     ) : (
@@ -31,6 +38,11 @@ const Home = () => {
                     )}
                 </div>
             </div>
+
+            <IncidentModal
+                incident={selectedIncident}
+                onClose={() => setSelectedIncident(null)}
+            />
         </div>
     )
 }

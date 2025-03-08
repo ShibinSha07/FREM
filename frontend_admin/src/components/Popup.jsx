@@ -9,6 +9,8 @@ const Popup = () => {
     const { popup, setPopup, incidents } = useSocket();
     const [note, setNote] = useState("");
 
+    const acitveIncidents = incidents.filter(incident => incident.status === "pending")
+
     const handleAccept = async () => {
         try {
             const response = await axios.post(`${API_URL}/incidents/`, {
@@ -64,34 +66,34 @@ const Popup = () => {
                             </button>
                         </div>
 
-                        <h2 className='text-xl font-bold mb-2'>Active Incidents</h2>
+                        <h2 className='text-xl font-bold mb-4'>Active Incidents</h2>
 
-                        {/* <div className="overflow-x-auto mb-4">
+                        <div className="overflow-x-auto mb-4">
                             <table className="w-full border-collapse border border-gray-300">
                                 <thead>
                                     <tr className="bg-gray-200">
                                         <th className="border border-gray-300 px-4 py-2">Location</th>
-                                        <th className="border border-gray-300 px-4 py-2">Status</th>
+                                        <th className="border border-gray-300 px-4 py-2">Note</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {incidents.length > 0 ? (
-                                        incidents.map((incident) => (
-                                            <tr key={incident.incident_id} className="text-center">
-                                                <td className="border border-gray-300 px-4 py-2">{incident.location}</td>
-                                                <td className="border border-gray-300 px-4 py-2">{incident.status}</td>
+                                    {acitveIncidents.length > 0 ? (
+                                        acitveIncidents.map((incident) => (
+                                            <tr key={incident.id} className="text-center">
+                                                <td className="border border-gray-300 px-4 py-2">{incident.place}</td>
+                                                <td className="border border-gray-300 px-4 py-2">{incident.note}</td>
                                             </tr>
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="3" className="text-center py-4">No incidents reported</td>
+                                            <td colSpan="3" className="text-center py-4">No active incidents</td>
                                         </tr>
                                     )}
                                 </tbody>
                             </table>
-                        </div> */}
+                        </div>
 
-                        <button className='bg-red-500 p-2 rounded-md text-white m-auto w-40' onClick={() => setPopup(null)}>Close</button>
+                        <button className='bg-red-500 p-2 rounded-md text-white mx-auto w-40' onClick={() => setPopup(null)}>Close</button>
                     </>
                 )}
 
