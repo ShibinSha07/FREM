@@ -29,7 +29,11 @@ class Fireman(db.Model):
 class Vehicle(db.Model):
     __tablename__ = 'vehicle'
     id = db.Column(db.Integer, primary_key=True)
+    numberplate=db.Column(db.String(10), nullable=False)
+    model = db.Column(db.String(50), nullable=False)
+    yom=db.Column(db.Integer)
     status = db.Column(db.String(50), nullable=False)
+    
 
 class Allocation(db.Model):
     __tablename__ = 'allocation'
