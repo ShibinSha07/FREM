@@ -59,7 +59,7 @@ const UserHome = ({ navigation }) => {
             const { latitude, longitude } = location.coords;
 
             const requestData = {
-                coordinates: `${longitude} ${latitude}`,
+                coordinates: `${latitude} ${longitude}`,
                 place: place,
                 incident_id: null,
             };
