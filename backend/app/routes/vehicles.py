@@ -2,12 +2,12 @@ from flask import Blueprint, request, jsonify
 from .. import db
 from ..models import Vehicle
 
-vehicles_bp = Blueprint('vehicles', __name__)
+vehicles_bp = Blueprint('vehicle', __name__)
 
 @vehicles_bp.route('/', methods=['POST'])
 def create_vehicle():
     data = request.json
-
+    print("working")
     if not all(key in data for key in ['numberplate', 'model', 'yom', 'status']):
         return jsonify({"error": "Missing required fields"}), 400
 

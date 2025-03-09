@@ -7,6 +7,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     const menuItems = [
         { item: "Home", path: "/" },
         { item: "Fireman", path: "/fireman" },
+        {item: "Vehicle", path: "/vehicle" }
     ]
 
     return (
