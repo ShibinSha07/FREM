@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { API_URL } from '../../../api';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const AddFireman = () => {
+
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         fid: '',
         name: '',
         contact: '',
-        status: 'off-duty',
+        status: 'Off-Duty',
     });
 
     const handleChange = (e) => {
@@ -21,7 +24,7 @@ const AddFireman = () => {
         try {
             const response = await axios.post(`${API_URL}/fireman/`, formData)
             if (response.status === 201) {
-                setFormData({ fid: '', name: '', contact: '', status: 'off-duty' });
+                setFormData({ fid: '', name: '', contact: '', status: 'Off-Duty' });
             } else {
                 console.error('Failed to add fireman');
             }
@@ -130,8 +133,13 @@ const AddFireman = () => {
                     </div>
                 </div>
 
-                <div className='w-96 bg-orange-500 mx-auto text-center text-white font-semibold p-2 rounded hover:bg-orange-600'>
-                    <button type='submit' className='w-full'>Add Fireman</button>
+                <div className='w-1/2 mx-auto flex justify-center gap-8'>
+                    <button type='button' onClick={() => navigate(-1)} className='w-full bg-gray-400 text-white font-semibold p-2 rounded hover:bg-gray-500'>
+                        Cancel
+                    </button>
+                    <button type='submit' className='w-full bg-orange-500 text-white font-semibold p-2 rounded hover:bg-orange-600'>
+                        Add Fireman
+                    </button>
                 </div>
             </form>
 
