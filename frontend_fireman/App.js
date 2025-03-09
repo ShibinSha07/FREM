@@ -28,7 +28,7 @@ const PopupWrapper = () => {
 };
 
 const MainNavigator = () => (
-  <Stack.Navigator initialRouteName="WelcomeScreen">
+  <Stack.Navigator initialRouteName="HomeScreen">
     <Stack.Screen name="WelcomeScreen" options={{ headerShown: false }} component={WelcomeScreen} />
     <Stack.Screen name="LoginScreen" options={{ headerShown: false }} component={LoginScreen} />
     <Stack.Screen name="HomeScreen" options={{ headerShown: false }} component={HomeScreen} />

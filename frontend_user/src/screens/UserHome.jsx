@@ -61,7 +61,6 @@ const UserHome = ({ navigation }) => {
             const requestData = {
                 coordinates: `${latitude} ${longitude}`,
                 place: place,
-                incident_id: null,
             };
 
             const response = await axios.post(`${API_URL}/calls`, requestData);

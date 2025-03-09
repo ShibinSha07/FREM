@@ -65,6 +65,7 @@ const Fireman = () => {
                             <th className="px-4 py-4">FID</th>
                             <th className="px-4 py-4">Name</th>
                             <th className="px-4 py-4">Contact</th>
+                            <th className="px-4 py-4">Rank</th>
                             <th className="px-4 py-4">Status</th>
                             <th className="px-4 py-4">Update Status</th>
                         </tr>
@@ -76,18 +77,19 @@ const Fireman = () => {
                                     <td className="px-4 py-4">{fireman.fid}</td>
                                     <td className="px-4 py-4">{fireman.name}</td>
                                     <td className="px-4 py-4">{fireman.contact}</td>
+                                    <td className="px-4 py-4">{fireman.rank}</td>
                                     <td className={`px-4 py-4 ${fireman.status === "On-Duty" ? "text-green-500 font-bold" : "text-red-600 font-bold"}`}>
                                         {fireman.status}
                                     </td>
                                     <td className="px-4 py-4 flex justify-center items-center">
                                         {fireman.status === "Off-Duty" ? (
                                             <CgMathPlus
-                                                className="text-green-500 text-2xl cursor-pointer bg-gray-300"
+                                                className="text-green-500 text-2xl cursor-pointer bg-gray-300 rounded-sm"
                                                 onClick={() => updateStatus(fireman.id, "On-Duty")}
                                             />
                                         ) : (
                                             <CgMathMinus
-                                                className="text-red-500 text-2xl cursor-pointer bg-gray-300 "
+                                                className="text-red-500 text-2xl cursor-pointer bg-gray-300 rounded-sm"
                                                 onClick={() => updateStatus(fireman.id, "Off-Duty")}
                                             />
                                         )}

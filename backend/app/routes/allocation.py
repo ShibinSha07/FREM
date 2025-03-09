@@ -2,20 +2,22 @@ from flask import Blueprint, request, jsonify
 from .. import db
 from ..models import Allocation, Incident
 
-allocations_bp = Blueprint('allocations', __name__)
+allocation_bp = Blueprint('allocation', __name__)
 
-@allocations_bp.route('/', methods=['POST'])
+@allocation_bp.route('/', methods=['POST'])
 def allocate_vehicle():
     data = request.json
-    allocation = Allocation(
-        vehicle_id=data['vehicle_id'],
-        incident_id=data['incident_id']
-    )
-    db.session.add(allocation)
+    firemen = data.get('firemen', [])
+    incident_id = data['incident_id']
+    
+    allocations = [Allocation(fid=fid, incident_id=incident_id) for fid in firemen]
+    
+    db.session.bulk_save_objects(allocations) 
     db.session.commit()
-    return jsonify({"message": "Vehicle allocated to incident"}), 201
+    
+    return jsonify({"message": "Vehicle allocated to incident"}), 200
 
-@allocations_bp.route('/<int:vehicle_id>', methods=['DELETE'])
+@allocation_bp.route('/<int:vehicle_id>', methods=['DELETE'])
 def delete_allocation(vehicle_id):
     allocation = Allocation.query.filter_by(vehicle_id=vehicle_id).first()
     if not allocation:
@@ -25,7 +27,7 @@ def delete_allocation(vehicle_id):
     db.session.commit()
     return jsonify({"message": f"Allocation for vehicle {vehicle_id} deleted"}), 200
 
-@allocations_bp.route('/<int:vehicle_id>/allocated', methods=['GET'])
+@allocation_bp.route('/<int:vehicle_id>/allocated', methods=['GET'])
 def check_allocation(vehicle_id):
     allocation = db.session.query(Allocation, Incident).join(
         Incident, Allocation.incident_id == Incident.id

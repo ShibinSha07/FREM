@@ -11,6 +11,7 @@ const AddFireman = () => {
         fid: '',
         name: '',
         contact: '',
+        rank: '',
         status: 'Off-Duty',
     });
 
@@ -24,7 +25,9 @@ const AddFireman = () => {
         try {
             const response = await axios.post(`${API_URL}/fireman/`, formData)
             if (response.status === 201) {
-                setFormData({ fid: '', name: '', contact: '', status: 'Off-Duty' });
+                setFormData({ fid: '', name: '', contact: '', rank: '', status: 'Off-Duty' });
+                alert('Fireman Successfully Added!');
+                navigate(-1)
             } else {
                 console.error('Failed to add fireman');
             }
@@ -131,13 +134,26 @@ const AddFireman = () => {
                             placeholder='Enter Blood group'
                         />
                     </div>
+
+                    <div>
+                        <label className='block font-semibold mb-1'>Rank</label>
+                        <input
+                            type='text'
+                            name='rank'
+                            value={formData.rank}
+                            onChange={handleChange}
+                            required
+                            className='w-full p-2 border border-gray-300 rounded'
+                            placeholder='Enter Blood group'
+                        />
+                    </div>
                 </div>
 
-                <div className='w-1/2 mx-auto flex justify-center gap-8'>
-                    <button type='button' onClick={() => navigate(-1)} className='w-full bg-gray-400 text-white font-semibold p-2 rounded hover:bg-gray-500'>
+                <div className='flex justify-around'>
+                    <button type='button' onClick={() => navigate(-1)} className='w-96 bg-gray-400 text-white font-semibold p-2 rounded hover:bg-gray-500'>
                         Cancel
                     </button>
-                    <button type='submit' className='w-full bg-orange-500 text-white font-semibold p-2 rounded hover:bg-orange-600'>
+                    <button type='submit' className='w-96 bg-orange-500 text-white font-semibold p-2 rounded hover:bg-orange-600'>
                         Add Fireman
                     </button>
                 </div>

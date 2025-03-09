@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from .. import db
-from ..models import Fireman
+from ..models import Fireman, Allocation
 
 fireman_bp = Blueprint('fireman', __name__)
 
@@ -13,11 +13,35 @@ def get_fireman():
             "fid": fireman.fid,
             "name": fireman.name,
             "contact": fireman.contact,
+            "rank": fireman.rank,
             "status": fireman.status
         }
         for fireman in firemen
     ]
     return jsonify(fireman_list), 200
+
+# # get the fireman which are in on duty and not allocated to any incident.
+# @fireman_bp.route('/unallotted', methods=['GET'])
+# def get_unallotted_firemen():
+#     subquery = db.session.query(Allocation.fid).subquery()
+
+#     unallotted_firemen = Fireman.query.filter(
+#         Fireman.status == "On-Duty", 
+#         ~Fireman.fid.in_(subquery)
+#     ).all()
+
+#     return jsonify([
+#         {
+#             "id": fireman.id,
+#             "fid": fireman.fid,
+#             "name": fireman.name,
+#             "contact": fireman.contact,
+#             "rank": fireman.rank,
+#             "status": fireman.status
+#         }
+#         for fireman in unallotted_firemen
+#     ]), 200
+
 
 @fireman_bp.route('/', methods=['POST'])
 def add_fireman():
@@ -27,6 +51,7 @@ def add_fireman():
         fid=data["fid"],
         name=data["name"],
         contact=data["contact"],
+        rank=data["rank"],
         status=data["status"]
     )
     db.session.add(new_fireman)
@@ -37,6 +62,7 @@ def add_fireman():
         "fid": new_fireman.fid,
         "name": new_fireman.name,
         "contact": new_fireman.contact,
+        "rank": new_fireman.rank,
         "status": new_fireman.status
     }}), 201
     
@@ -56,5 +82,6 @@ def update_fireman_status(id):
         "fid": fireman.fid,
         "name": fireman.name,
         "contact": fireman.contact,
+        "rank": fireman.rank,
         "status": fireman.status
     }})
