@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { API_URL } from '../../../api';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../lib/api';
 
 const AddFireman = () => {
 

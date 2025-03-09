@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { API_URL } from '../../../api';
 import axios from 'axios';
+import { API_URL } from '../lib/api';
 
 const AddVehicle = () => {
     const [formData, setFormData] = useState({
