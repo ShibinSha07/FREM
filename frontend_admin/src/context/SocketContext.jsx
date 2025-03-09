@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import io from "socket.io-client";
-import { API_URL } from "../../../api";
+import { API_URL } from '../lib/api';
+import axios from 'axios'
 
 const socket = io("http://127.0.0.1:3001");
 
@@ -16,9 +17,8 @@ export const SocketProvider = ({ children }) => {
     useEffect(() => {
         const fetchIncidents = async () => {
             try {
-                const response = await fetch(`${API_URL}/calls`)
-                const data = await response.json();
-                setIncidents(data)
+                const response = await axios.get(`${API_URL}/incidents`)
+                setIncidents(response.data)
             } catch (error) {
                 console.error("error in fetching the incidents", error)
             }
@@ -29,8 +29,6 @@ export const SocketProvider = ({ children }) => {
 
     useEffect(() => {
         socket.on("new_call", (data) => {
-            console.log('new incident recieved', data)
-            setIncidents((prev) => [...prev, data]);
             setPopup(data);
         })
 
@@ -39,13 +37,13 @@ export const SocketProvider = ({ children }) => {
         };
     }, [])
 
-    useEffect(() => {
-        const dummyData = {
-            place: "Main Street, NY",
-            coordinates: "3849083 34980384"
-        };
-        setPopup(dummyData);
-    }, []);
+    // useEffect(() => {
+    //     const dummyData = {
+    //         place: "Main Street, NY",
+    //         coordinates: "3849083 34980384"
+    //     };
+    //     setPopup(dummyData);
+    // }, []);
 
 
     return (

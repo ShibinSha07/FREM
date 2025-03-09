@@ -39,3 +39,22 @@ def add_fireman():
         "contact": new_fireman.contact,
         "status": new_fireman.status
     }}), 201
+    
+
+@fireman_bp.route('/<int:id>', methods=['PUT'])
+def update_fireman_status(id):
+    fireman = Fireman.query.get(id)
+    if not fireman:
+        return jsonify({"error": "Fireman not found"}), 404
+    
+    data = request.json
+    fireman.status = data.get("status", fireman.status)
+    
+    db.session.commit()
+    return jsonify({"message": "Status updated successfully", "fireman": {
+        "id": fireman.id,
+        "fid": fireman.fid,
+        "name": fireman.name,
+        "contact": fireman.contact,
+        "status": fireman.status
+    }})

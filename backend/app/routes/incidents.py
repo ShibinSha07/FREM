@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from .. import db, socketio
 from ..models import Incident
+from datetime import datetime
 
 incidents_bp = Blueprint('incidents', __name__)
 
@@ -41,3 +42,24 @@ def create_incident():
             "message": "Incident created successfully",
             "incident_id": new_incident.id
         }), 201
+    
+@incidents_bp.route('/<int:id>/status', methods=['PUT'])
+def update_incident_status(id):
+    incident = Incident.query.get(id)
+
+    if not incident:
+        return jsonify({"error": "Incident not found"}), 404
+
+    data = request.json
+
+    if 'status' not in data:
+        return jsonify({"error": "Status field is required"}), 400
+
+    incident.status = data['status']
+    db.session.commit()
+
+    return jsonify({
+        "message": "Incident status updated successfully",
+        "incident_id": incident.id,
+        "new_status": incident.status
+    }), 200
