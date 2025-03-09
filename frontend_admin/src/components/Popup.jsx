@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Modal from "react-modal"
 import { useSocket } from '../context/SocketContext'
 import axios from 'axios';
-import { API_URL } from '../../../api';
+import { API_URL } from '../lib/api';
 
 const Popup = () => {
 
