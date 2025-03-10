@@ -107,7 +107,7 @@ const AddFireman = () => {
                     <div>
                         <label className='block font-semibold mb-1'>Contact</label>
                         <input
-                            type='tel'
+                            type='text'
                             name='contact'
                             value={formData.contact}
                             onChange={handleChange}

@@ -6,19 +6,25 @@ const AllotFiremanModal = ({ incident, onClose }) => {
 
     const [firemen, setFiremen] = useState([]);
     const [selectedFiremen, setSelectedFiremen] = useState([]);
+    const [allottedFiremen, setAllottedFiremen] = useState([])
 
     useEffect(() => {
-        const fetchUnallottedFiremen = async () => {
+        const fetchFiremenData  = async () => {
             try {
-                const response = await axios.get(`${API_URL}/fireman/unallotted`);
-                setFiremen(response.data);
+                const [unallottedResponse, allottedResponse] = await Promise.all([
+                    axios.get(`${API_URL}/fireman/unallotted`),
+                    axios.get(`${API_URL}/allocation/${incident.id}`)
+                ]);
+
+                setFiremen(unallottedResponse.data);
+                setAllottedFiremen(allottedResponse.data);
             } catch (error) {
                 console.error("Error fetching firemen:", error);
             }
         };
 
-        fetchUnallottedFiremen();
-    }, []);
+        fetchFiremenData();
+    }, [incident.id]);
 
     const handleCheckboxChange = (fid) => {
         setSelectedFiremen((prevSelected) =>
@@ -29,7 +35,6 @@ const AllotFiremanModal = ({ incident, onClose }) => {
     };
 
     const handleAllot = async () => {
-        console.log("workn")
         if (selectedFiremen.length === 0) {
             alert("Please select at least one fireman!");
             return;
@@ -40,8 +45,6 @@ const AllotFiremanModal = ({ incident, onClose }) => {
                 firemen: selectedFiremen,
                 incident_id: incident.id
             });
-
-            console.log(response.status)
 
             if (response.status === 200) {
                 alert("Firemen successfully allotted!");
@@ -57,12 +60,12 @@ const AllotFiremanModal = ({ incident, onClose }) => {
             <div className="bg-white p-6 rounded-lg shadow-lg w-2/3">
                 <h2 className="text-xl font-bold mb-4 text-center">Allot Fireman to Incident</h2>
 
-                <div className="max-h-100 overflow-y-auto rounded">
+                <div className="max-h-100 overflow-y-auto rounded mb-10">
                     {firemen.length > 0 ? (
-                        <table className="w-full border-collapse border border-gray-300">
+                        <table className="w-full border-collapse">
                             <thead>
-                                <tr className="bg-gray-200">
-                                    <th className="border p-2">FID</th>
+                                <tr className="bg-red-200 border-2 border-red-200">
+                                    <th className="border border-red-200 p-2">FID</th>
                                     <th className="border p-2">Name</th>
                                     <th className="border p-2">Rank</th>
                                     <th className="border p-2">Allot</th>
@@ -70,15 +73,15 @@ const AllotFiremanModal = ({ incident, onClose }) => {
                             </thead>
                             <tbody>
                                 {firemen.map(fireman => (
-                                    <tr key={fireman.id} className="text-center">
-                                        <td className="border p-2">{fireman.id}</td>
+                                    <tr key={fireman.fid} className="text-center border-2 border-red-200">
+                                        <td className="border p-2">{fireman.fid}</td>
                                         <td className="border p-2">{fireman.name}</td>
                                         <td className="border p-2">{fireman.rank}</td>
                                         <td className="border p-2">
                                             <input
                                                 type="checkbox"
-                                                checked={selectedFiremen.includes(fireman.id)}
-                                                onChange={() => handleCheckboxChange(fireman.id)}
+                                                checked={selectedFiremen.includes(fireman.fid)}
+                                                onChange={() => handleCheckboxChange(fireman.fid)}
                                                 className="w-4 h-4"
                                             />
                                         </td>
@@ -87,7 +90,43 @@ const AllotFiremanModal = ({ incident, onClose }) => {
                             </tbody>
                         </table>
                     ) : (
-                        <p className="text-gray-500 text-center">All firemen are on duty</p>
+                        <p className="text-gray-500 text-center">All firemen are on busy. No firemen left!</p>
+                    )}
+                </div>
+
+                <h2 className="text-xl font-bold mb-4 text-center">Alloted Firemen</h2>
+
+                <div className="max-h-100 overflow-y-auto rounded mb-8">
+                    {allottedFiremen?.allocated_firemen?.length > 0 ? (
+                        <table className="w-full border-collapse border border-gray-300">
+                            <thead>
+                                <tr className="bg-red-200 border-2 border-red-200">
+                                    <th className="border p-2">FID</th>
+                                    <th className="border p-2">Name</th>
+                                    <th className="border p-2">Rank</th>
+                                    {/* <th className="border p-2">Allot</th> */}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {allottedFiremen.allocated_firemen.map(fireman => (
+                                    <tr key={fireman.fid} className="text-center border-2 border-red-200">
+                                        <td className="border p-2">{fireman.fid}</td>
+                                        <td className="border p-2">{fireman.name}</td>
+                                        <td className="border p-2">{fireman.rank}</td>
+                                        {/* <td className="border p-2">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedFiremen.includes(fireman.fid)}
+                                                onChange={() => handleCheckboxChange(fireman.fid)}
+                                                className="w-4 h-4"
+                                            />
+                                        </td> */}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <p className="text-gray-500 text-center">No firemen allotted yet</p>
                     )}
                 </div>
 

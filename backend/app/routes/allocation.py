@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from .. import db
-from ..models import Allocation, Incident
+from ..models import Allocation, Incident, Fireman
 
 allocation_bp = Blueprint('allocation', __name__)
 
@@ -17,28 +17,31 @@ def allocate_vehicle():
     
     return jsonify({"message": "Vehicle allocated to incident"}), 200
 
-@allocation_bp.route('/<int:vehicle_id>', methods=['DELETE'])
-def delete_allocation(vehicle_id):
-    allocation = Allocation.query.filter_by(vehicle_id=vehicle_id).first()
-    if not allocation:
-        return jsonify({"message": f"No allocation found for vehicle {vehicle_id}"}), 404
 
-    db.session.delete(allocation)
-    db.session.commit()
-    return jsonify({"message": f"Allocation for vehicle {vehicle_id} deleted"}), 200
+# Endpoint to fetch firemen allocated to a specific incident
+@allocation_bp.route('/<int:incident_id>', methods=['GET'])
+def get_allocated_firemen(incident_id):
+    allotted_firemen = (
+        db.session.query(Fireman.fid, Fireman.name, Fireman.contact, Fireman.rank, Fireman.status)
+        .join(Allocation, Fireman.fid == Allocation.fid)
+        .filter(Allocation.incident_id == incident_id)
+        .all()
+    )
 
-@allocation_bp.route('/<int:vehicle_id>/allocated', methods=['GET'])
-def check_allocation(vehicle_id):
-    allocation = db.session.query(Allocation, Incident).join(
-        Incident, Allocation.incident_id == Incident.id
-    ).filter(Allocation.vehicle_id == vehicle_id).first()
+    firemen_list = [
+        {"fid": f.fid, "name": f.name, "contact": f.contact, "rank": f.rank, "status": f.status}
+        for f in allotted_firemen
+    ]
 
-    if allocation:
-        incident = allocation[1]  # Get the Incident object
-        if incident.location.startswith("POINT"):
-            longitude, latitude = map(float, incident.location.replace("POINT(", "").replace(")", "").split())
-            return jsonify({"allocated": True, "latitude": latitude, "longitude": longitude}), 200
-        
-        return jsonify({"allocated": True, "message": "Invalid location format."}), 500
+    return jsonify({"incident_id": incident_id, "allocated_firemen": firemen_list}), 200
 
-    return jsonify({"allocated": False, "message": f"Vehicle {vehicle_id} is not allocated to any incident."}), 200
+@allocation_bp.route('/<int:incident_id>', methods=['DELETE'])
+def delete_allocated_firemen(incident_id):
+    print("deleting occuring. what's the excuse")
+    try:
+        db.session.query(Allocation).filter(Allocation.incident_id == incident_id).delete(synchronize_session=False)
+        db.session.commit()
+        return jsonify({"message": "Firemen deallocated from incident"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500

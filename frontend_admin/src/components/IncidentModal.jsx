@@ -11,16 +11,18 @@ const IncidentModal = ({ incident, onClose }) => {
 
     const handleUpdateStatus = async () => {
         try {
+            await axios.delete(`${API_URL}/allocation/${incident.id}`);
+
             const response = await axios.put(`${API_URL}/incidents/${incident.id}/status`, {
                 status: "finished"
             });
 
             if (response.status === 200) {
-                alert('incident marked as finished!')
+                alert('incident marked as finished and firemen deallocated!')
                 onClose();
             }
         } catch (error) {
-            console.error("error updating status:", error)
+            console.error("error updating status:", error.message)
         }
     }
 

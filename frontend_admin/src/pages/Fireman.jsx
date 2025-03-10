@@ -18,7 +18,6 @@ const Fireman = () => {
                 console.error("error in fetching fireman", error)
             }
         }
-
         fetchFireman();
     }, [])
 
@@ -27,7 +26,7 @@ const Fireman = () => {
             await axios.put(`${API_URL}/fireman/${id}`, { status: newStatus })
             setFireman(prevFireman =>
                 prevFireman.map(f =>
-                    f.id === id ? { ...f, status: newStatus } : f
+                    f.fid === id ? { ...f, status: newStatus } : f
                 )
             )
         } catch (error) {
@@ -73,7 +72,7 @@ const Fireman = () => {
                     <tbody>
                         {filteredFireman.length > 0 ? (
                             filteredFireman.map(fireman => (
-                                <tr key={fireman.id} className="border-b border-gray-300 hover:bg-gray-200">
+                                <tr key={fireman.fid} className="border-b border-gray-300 hover:bg-gray-200">
                                     <td className="px-4 py-4">{fireman.fid}</td>
                                     <td className="px-4 py-4">{fireman.name}</td>
                                     <td className="px-4 py-4">{fireman.contact}</td>
@@ -85,12 +84,12 @@ const Fireman = () => {
                                         {fireman.status === "Off-Duty" ? (
                                             <CgMathPlus
                                                 className="text-green-500 text-2xl cursor-pointer bg-gray-300 rounded-sm"
-                                                onClick={() => updateStatus(fireman.id, "On-Duty")}
+                                                onClick={() => updateStatus(fireman.fid, "On-Duty")}
                                             />
                                         ) : (
                                             <CgMathMinus
                                                 className="text-red-500 text-2xl cursor-pointer bg-gray-300 rounded-sm"
-                                                onClick={() => updateStatus(fireman.id, "Off-Duty")}
+                                                onClick={() => updateStatus(fireman.fid, "Off-Duty")}
                                             />
                                         )}
                                     </td>
@@ -98,7 +97,7 @@ const Fireman = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="5" className="text-center py-4">No firemen found.</td>
+                                <td colSpan="6" className="text-center py-4">No firemen found.</td>
                             </tr>
                         )}
                     </tbody>
