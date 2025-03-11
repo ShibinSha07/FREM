@@ -1,299 +1,278 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator, StyleSheet } from 'react-native';
-import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
-import axios from 'axios';
-import { MaterialIcons } from '@expo/vector-icons';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+  FlatList,
+} from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 
-// if (typeof global === 'undefined') {
-//     global = window;
-//   }
+const WaterResourceScreen = ({ route, navigation }) => {
+  // Get location passed from previous screen
+  const { location } = route.params;
+  console.log(location);
+  
+  // States
+  const [radius, setRadius] = useState('5000');
+  const [waterResources, setWaterResources] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showMap, setShowMap] = useState(true);
+  
+  // Overpass API endpoint
+  const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
+  
+  // Initial region based on passed location
+  const initialRegion = {
+    latitude: location.latitude,
+    longitude: location.longitude,
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05,
+  };
 
-import MarkerClusterer from 'react-native-maps-clustering';
-
-
-const WaterResourcesScreen = ({ route }) => {
-    // Get location from previous screen
-    const { location } = route.params;
-
-    const [region, setRegion] = useState({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-    });
-    const [waterResources, setWaterResources] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchRadius, setSearchRadius] = useState(5000); // Default 5000m (5km)
-    const mapRef = useRef(null);
-
-    // Initial fetch when component mounts
-    useEffect(() => {
-        fetchWaterResources();
-    }, []);
-
-    // Function to fetch water resources from Overpass API
-    const fetchWaterResources = async () => {
-        setLoading(true);
+  // Fetch water resources directly from Overpass API
+  const fetchWaterResources = async () => {
+    const radiusValue = parseInt(radius) || 5000;
+    
+    // Create Overpass QL query
+    const query = `
+      [out:json];
+      (
+        node["natural"="water"](around:${radiusValue},${location.latitude},${location.longitude});
+        way["natural"="water"](around:${radiusValue},${location.latitude},${location.longitude});
+        relation["natural"="water"](around:${radiusValue},${location.latitude},${location.longitude});
+      );
+      out center;
+    `;
+    
+    try {
+      setLoading(true);
+      
+      const response = await fetch(OVERPASS_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `data=${encodeURIComponent(query)}`,
+      });
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      const data = await response.json();
+      
+      if (data.elements && data.elements.length > 0) {
+        // Process the raw Overpass API data
+        const processedResources = data.elements.map(element => {
+          const resource = {
+            id: element.id,
+            type: element.type,
+            name: element.tags?.name || 'Unnamed Water Body',
+          };
+          
+          // Extract coordinates
+          if (element.type === 'node') {
+            resource.lat = element.lat;
+            resource.lon = element.lon;
+          } else if ((element.type === 'way' || element.type === 'relation') && element.center) {
+            resource.lat = element.center.lat;
+            resource.lon = element.center.lon;
+          }
+          
+          return resource;
+        }).filter(resource => resource.lat && resource.lon); // Filter out elements without coordinates
         
-        try {
-            const overpassQuery = `
-                [out:json];
-                (
-                    node["natural"="water"](around:${searchRadius}, ${region.latitude}, ${region.longitude});
-                    way["natural"="water"](around:${searchRadius}, ${region.latitude}, ${region.longitude});
-                    relation["natural"="water"](around:${searchRadius}, ${region.latitude}, ${region.longitude});
-                );
-                out center;
-            `;
-            
-            const response = await axios.get('https://overpass-api.de/api/interpreter', {
-                params: { data: overpassQuery },
-                timeout: 10000
-            });
-            
-            if (!response.data.elements || response.data.elements.length === 0) {
-                Alert.alert("No Results", "No water resources found in this area.");
-                setWaterResources([]);
-                setLoading(false);
-                return;
-            }
-            
-            // Process and format the water resources
-            const resources = response.data.elements.map(element => {
-                let coordinates = {};
-                
-                if (element.type === 'node') {
-                    coordinates = {
-                        lat: element.lat,
-                        lon: element.lon
-                    };
-                } else if (element.type === 'way' || element.type === 'relation') {
-                    if (element.center) {
-                        coordinates = {
-                            lat: element.center.lat,
-                            lon: element.center.lon
-                        };
-                    }
-                }
-                
-                return {
-                    id: element.id,
-                    type: element.type,
-                    name: element.tags?.name || "Unnamed Water Body",
-                    ...coordinates
-                };
-            }).filter(resource => resource.lat && resource.lon);
-            
-            setWaterResources(resources);
-        } catch (error) {
-            console.error("Error fetching water resources:", error);
-            Alert.alert("Error", "Failed to fetch water resources. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
+        setWaterResources(processedResources);
+      } else {
+        Alert.alert('Info', 'No water resources found in this area');
+        setWaterResources([]);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to fetch water resources');
+      console.error('Error fetching water resources:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    // Search location using OpenStreetMap Nominatim API
-    const searchLocation = async () => {
-        if (!searchQuery || searchQuery.length < 3) {
-            Alert.alert("Invalid Search", "Please enter at least 3 characters.");
-            return;
-        }
-        
-        setLoading(true);
-        
-        try {
-            const response = await axios.get(
-                `https://nominatim.openstreetmap.org/search`,
-                {
-                    params: {
-                        format: 'json',
-                        q: searchQuery,
-                        limit: 1
-                    }
-                }
-            );
-            
-            if (response.data && response.data.length > 0) {
-                const location = response.data[0];
-                const newRegion = {
-                    latitude: parseFloat(location.lat),
-                    longitude: parseFloat(location.lon),
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                };
-                
-                setRegion(newRegion);
-                mapRef.current?.animateToRegion(newRegion);
-                
-                // Fetch water resources for this new location
-                fetchWaterResources();
-            } else {
-                Alert.alert("Location Not Found", "Could not find the location. Please try a different search term.");
-            }
-        } catch (error) {
-            console.error("Error searching location:", error);
-            Alert.alert("Error", "Failed to search location. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
+  // Fetch water resources when screen loads
+  useEffect(() => {
+    fetchWaterResources();
+  }, []);
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    value={searchQuery}
-                    onChangeText={setSearchQuery}
-                    placeholder="Search location"
-                    onSubmitEditing={searchLocation}
-                />
-                <TextInput
-                    style={styles.input}
-                    value={searchRadius.toString()}
-                    onChangeText={(text) => setSearchRadius(parseInt(text) || 5000)}
-                    placeholder="Radius (meters)"
-                    keyboardType="numeric"
-                />
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={fetchWaterResources}
-                    disabled={loading}
-                >
-                    <Text style={styles.buttonText}>
-                        {loading ? "Searching..." : "Find Water Resources"}
-                    </Text>
-                </TouchableOpacity>
-            </View>
-            
-            <MapView
-                ref={mapRef}
-                style={styles.map}
-                provider={PROVIDER_GOOGLE}
-                region={region}
-                onRegionChangeComplete={setRegion}
-            >
-                {/* User's location marker */}
-                <Marker
-                    coordinate={{
-                        latitude: location.coords.latitude,
-                        longitude: location.coords.longitude
-                    }}
-                    title="Your Location"
-                >
-                    <View style={styles.userMarker}>
-                        <MaterialIcons name="my-location" size={24} color="#1E88E5" />
-                    </View>
-                </Marker>
-                
-                {/* Search radius circle */}
-                <Circle
-                    center={{
-                        latitude: region.latitude,
-                        longitude: region.longitude
-                    }}
-                    radius={searchRadius}
-                    strokeWidth={1}
-                    strokeColor="rgba(0, 100, 255, 0.3)"
-                    fillColor="rgba(0, 100, 255, 0.1)"
-                />
-                
-                {/* Water resources markers with clustering */}
-                <MarkerClusterer>
-                    {waterResources.map((resource, index) => (
-                        <Marker
-                            key={`${resource.type}-${resource.id || index}`}
-                            coordinate={{
-                                latitude: parseFloat(resource.lat),
-                                longitude: parseFloat(resource.lon)
-                            }}
-                            title={resource.name}
-                            description={`Lat: ${resource.lat}, Lon: ${resource.lon}`}
-                        >
-                            <View style={styles.waterMarker}>
-                                <MaterialIcons name="water-drop" size={24} color="#29B6F6" />
-                            </View>
-                        </Marker>
-                    ))}
-                </MarkerClusterer>
-            </MapView>
-            
-            {loading && (
-                <View style={styles.loadingOverlay}>
-                    <ActivityIndicator size="large" color="#0066cc" />
-                    <Text style={styles.loadingText}>Searching for water resources...</Text>
-                </View>
-            )}
+  // Toggle between map and list view to help with performance
+  const toggleView = () => {
+    setShowMap(!showMap);
+  };
+
+  // Render a water resource item in the list
+  const renderItem = ({ item }) => (
+    <View style={styles.resourceItem}>
+      <Text style={styles.resourceName}>{item.name}</Text>
+      <Text>Type: {item.type}</Text>
+      <Text>Location: {item.lat.toFixed(5)}, {item.lon.toFixed(5)}</Text>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={[styles.input, styles.radiusInput]}
+          placeholder="Radius (meters)"
+          value={radius}
+          onChangeText={setRadius}
+          keyboardType="numeric"
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={fetchWaterResources}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>Find Water</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity style={styles.toggleButton} onPress={toggleView}>
+        <Text style={styles.toggleButtonText}>
+          {showMap ? "Show List View" : "Show Map View"}
+        </Text>
+      </TouchableOpacity>
+
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0066cc" />
+          <Text style={styles.loadingText}>Loading water resources...</Text>
         </View>
-    );
+      ) : showMap ? (
+        <View style={styles.mapContainer}>
+          <MapView
+            style={styles.map}
+            initialRegion={initialRegion}
+          >
+            {/* Current location marker */}
+            <Marker
+              coordinate={location}
+              title="Your Location"
+              pinColor="red"
+            />
+            
+            {/* Water resource markers */}
+            {waterResources.map((resource, index) => (
+              <Marker
+                key={`${resource.id || index}`}
+                coordinate={{
+                  latitude: parseFloat(resource.lat),
+                  longitude: parseFloat(resource.lon),
+                }}
+                title={resource.name}
+                description={`Type: ${resource.type}`}
+                pinColor="blue"
+              />
+            ))}
+          </MapView>
+        </View>
+      ) : (
+        <FlatList
+          data={waterResources}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => `${item.id || index}`}
+          contentContainerStyle={styles.listContainer}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No water resources found</Text>
+          }
+        />
+      )}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fafafa',
-    },
-    inputContainer: {
-        padding: 10,
-        backgroundColor: '#f0f0f0',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 10,
-        zIndex: 1,
-    },
-    input: {
-        padding: 8,
-        fontSize: 16,
-        backgroundColor: 'white',
-        borderRadius: 4,
-        flex: 1,
-        minWidth: 120,
-    },
-    button: {
-        backgroundColor: '#2196F3',
-        padding: 8,
-        borderRadius: 4,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 16,
-    },
-    map: {
-        flex: 1,
-    },
-    loadingOverlay: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(255,255,255,0.7)',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    loadingText: {
-        marginTop: 10,
-        fontSize: 16,
-        color: '#0066cc',
-    },
-    userMarker: {
-        backgroundColor: 'white',
-        borderRadius: 50,
-        padding: 5,
-        borderWidth: 2,
-        borderColor: '#1E88E5',
-    },
-    waterMarker: {
-        backgroundColor: 'white',
-        borderRadius: 50,
-        padding: 5,
-        borderWidth: 2,
-        borderColor: '#29B6F6',
-    },
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  inputContainer: {
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  input: {
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 5,
+  },
+  radiusInput: {
+    flex: 1,
+    marginRight: 10,
+  },
+  button: {
+    backgroundColor: '#0066cc',
+    padding: 10,
+    borderRadius: 5,
+    minWidth: 100,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  toggleButton: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    margin: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  toggleButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  mapContainer: {
+    flex: 1,
+  },
+  map: {
+    flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    color: '#444',
+  },
+  listContainer: {
+    padding: 10,
+  },
+  resourceItem: {
+    backgroundColor: 'white',
+    padding: 15,
+    borderRadius: 5,
+    marginBottom: 10,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+  },
+  resourceName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  emptyText: {
+    textAlign: 'center',
+    marginTop: 50,
+    color: '#666',
+  },
 });
 
-export default WaterResourcesScreen;
+export default WaterResourceScreen;
