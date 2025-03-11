@@ -45,3 +45,23 @@ def delete_allocated_firemen(incident_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+    
+    
+@allocation_bp.route('/<string:fid>/update-location', methods=['PUT'])
+def update_fireman_location(fid):
+    data = request.json
+    incident_id = data.get('incident_id')  # Incident ID
+    coordinates = data.get('coordinates')  # New coordinates
+
+    if not incident_id or not coordinates:
+        return jsonify({"error": "incident_id and coordinates are required"}), 400
+
+    allocation = Allocation.query.filter_by(fid=fid, incident_id=incident_id).first()
+
+    if not allocation:
+        return jsonify({"error": "Fireman not allocated to this incident"}), 404
+
+    allocation.coordinates = coordinates
+    db.session.commit()
+
+    return jsonify({"message": "Fireman location updated successfully"}), 200

@@ -33,6 +33,6 @@ def create_vehicle():
 def get_vehicles():
     vehicles = Vehicle.query.all()
     return jsonify([{
-        "id": veh.id,
+        "id": veh.vid,
         "status": veh.status
     } for veh in vehicles])

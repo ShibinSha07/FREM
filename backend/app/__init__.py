@@ -22,6 +22,7 @@ def create_app():
     from .routes.calls import calls_bp
     from .routes.fireman import fireman_bp
     from .routes.water_resource import water_bp
+    from .routes.vehicle_allocation import vehicle_allocation_bp
     
     from app import models, routes
 
@@ -31,5 +32,6 @@ def create_app():
     app.register_blueprint(calls_bp, url_prefix='/calls')
     app.register_blueprint(fireman_bp, url_prefix='/fireman')
     app.register_blueprint(water_bp, url_prefix="/api")
+    app.register_blueprint(vehicle_allocation_bp,url_prefix="/vehicle_allocation")
 
     return app

@@ -28,7 +28,7 @@ class Fireman(db.Model):
     
 class Vehicle(db.Model):
     __tablename__ = 'vehicle'
-    id = db.Column(db.Integer, primary_key=True)
+    vid = db.Column(db.Integer, primary_key=True)
     numberplate=db.Column(db.String(10), nullable=False)
     model = db.Column(db.String(50), nullable=False)
     yom=db.Column(db.Integer)
@@ -38,3 +38,10 @@ class Allocation(db.Model):
     __tablename__ = 'allocation'
     fid = db.Column(db.String(50), db.ForeignKey('fireman.fid'), primary_key=True)
     incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'), primary_key=True)
+    coordinates = db.Column(db.String(100))
+    
+class Vehicle_Allocation(db.Model):
+    __tablename__ = 'vehicle_allocation'
+    vid = db.Column(db.Integer,db.ForeignKey('vehicle.vid'), primary_key=True)
+    incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'), primary_key=True)
+    
