@@ -122,9 +122,9 @@ const UserHome = ({ navigation }) => {
                             </View>
 
                             <View className="flex-row justify-between gap-x-2 mb-2">
-                                <TouchableOpacity className="bg-blue-600 py-4 rounded-md flex-1">
+                                <TouchableOpacity className="bg-blue-600 py-4 rounded-md flex-1 " onPress={() =>navigation.navigate('WaterResourceScreen',{ location })}>
                                     <Text className="text-white text-center text-lg font-bold">
-                                        Nearest Fire Stations
+                                        Nearest Water Resource
                                     </Text>
                                 </TouchableOpacity>
 
