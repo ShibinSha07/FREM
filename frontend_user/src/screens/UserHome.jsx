@@ -176,7 +176,7 @@ const UserHome = ({ navigation }) => {
 
                 {!loading && showFloatingButton && (
                     <TouchableOpacity
-                        className="absolute bottom-6 right-6 bg-red-600 p-4 rounded-full shadow-lg"
+                        className="absolute bottom-6 right-6 bg-green-600 p-4 rounded-full shadow-lg"
                         onPress={makeCall}
                     >
                         <Ionicons name="call" size={28} color="white" />
