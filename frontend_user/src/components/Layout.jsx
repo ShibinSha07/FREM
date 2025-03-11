@@ -43,8 +43,10 @@ const Layout = ({ children }) => {
           <Image source={require('../assets/icon_home.png')} style={styles.image1} />
         </TouchableOpacity >
 
-        <TouchableOpacity>
-          <Image source={require('../assets/icon_profile.png')} style={styles.image2} />
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('FirstAid')}
+        >
+          <Image source={require('../assets/first_aid.png')} style={styles.image2} />
         </TouchableOpacity>
       </View>
 
