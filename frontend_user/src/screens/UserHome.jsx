@@ -6,6 +6,8 @@ import axios from 'axios';
 import Layout from '../components/Layout';
 import { API_URL } from '../lib/api.js';
 import { Ionicons } from "@expo/vector-icons";
+import ActiveIncidents from '../components/ActiveIncidents.jsx';
+import HelpNumbers from '../components/HelpNumbers.jsx';
 
 const UserHome = ({ navigation }) => {
 
@@ -166,11 +168,17 @@ const UserHome = ({ navigation }) => {
                         )}
                     </View>
 
+                    <ActiveIncidents />
+
+                    <HelpNumbers />
+
+
+{/* 
                     <View>
                         {Array.from({ length: 50 }).map((_, i) => (
                             <Text key={i}>Random text</Text>
                         ))}
-                    </View>
+                    </View> */}
 
                 </ScrollView>
 
