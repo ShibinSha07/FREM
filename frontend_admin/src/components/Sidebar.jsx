@@ -7,7 +7,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     const menuItems = [
         { item: "Home", path: "/" },
         { item: "Fireman", path: "/fireman" },
-        {item: "Vehicle", path: "/vehicle" }
+        { item: "Fire Vehicle", path: "/vehicle" }
     ]
 
     return (
@@ -17,7 +17,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         >
             <div className="flex justify-between items-center p-4">
                 <p className="text-xl font-bold">Menu</p>
-                <CgClose 
+                <CgClose
                     className="text-2xl cursor-pointer"
                     onClick={() => setIsOpen(false)}
                 />
