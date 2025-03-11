@@ -30,7 +30,6 @@ def create_app():
     app.register_blueprint(allocation_bp, url_prefix='/allocation')
     app.register_blueprint(calls_bp, url_prefix='/calls')
     app.register_blueprint(fireman_bp, url_prefix='/fireman')
-    app.register_blueprint(water_bp, url_prefix="/api")
     app.register_blueprint(vehicle_allocation_bp,url_prefix="/vehicle_allocation")
 
     return app
