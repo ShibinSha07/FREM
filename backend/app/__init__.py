@@ -21,7 +21,6 @@ def create_app():
     from .routes.allocation import allocation_bp
     from .routes.calls import calls_bp
     from .routes.fireman import fireman_bp
-    from .routes.water_resource import water_bp
     from .routes.vehicle_allocation import vehicle_allocation_bp
     
     from app import models, routes
