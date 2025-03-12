@@ -45,3 +45,11 @@ class Vehicle_Allocation(db.Model):
     vid = db.Column(db.Integer,db.ForeignKey('vehicle.vid'), primary_key=True)
     incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'), primary_key=True)
     
+    
+class Record(db.Model):
+    fid = db.Column(db.String(50), db.ForeignKey('fireman.fid'), primary_key=True)
+    incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'), primary_key=True)
+    start_time = db.Column(db.DateTime)
+    end_time = db.Column(db.DateTime)  
+
+    
