@@ -7,6 +7,8 @@ import Fireman from './pages/Fireman'
 import AddFireman from './pages/AddFireman'
 import Vehicle from './pages/Vehicle'
 import AddVehicle from './pages/AddVehicle'
+import Sidebar from './components/Sidebar'
+import Record from './pages/Record' 
 
 function App() {
 
