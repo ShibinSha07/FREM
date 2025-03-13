@@ -17,11 +17,8 @@ const UserHome = () => {
                     ListHeaderComponent={
                         <>
                             <Quote />
-
                             <Map />
-
                             <ActiveIncidents />
-
                             <HelpNumbers />
                         </>
                     }
