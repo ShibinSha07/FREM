@@ -7,6 +7,7 @@ import Fireman from './pages/Fireman'
 import AddFireman from './pages/AddFireman'
 import Vehicle from './pages/Vehicle'
 import AddVehicle from './pages/AddVehicle'
+import Sidebar from './components/Sidebar'
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
       <SocketProvider>
         <BrowserRouter>
           <Navbar />
+          <Sidebar />
           <Popup />
           <Routes>
             <Route path='/' element={<Home />} />

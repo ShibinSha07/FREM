@@ -10,7 +10,7 @@ const Navbar = () => {
 
     return (
         <>
-            <div className='flex justify-between border-b border-orange-400 items-center p-4 mb-4'>
+            <div className='flex justify-between border-b border-orange-400  items-center p-4 mb-4'>
                 <div className='flex items-center space-x-4'>
                     <CgMenu   
                         className='text-2xl font-bold'
@@ -18,7 +18,7 @@ const Navbar = () => {
                     />
                     <img src={logo} alt="logo" className='w-10 h-10' />
                 </div>
-                <p className='text-3xl font-bold'>Fire and Rescue Emergency Management</p>
+                <p className='text-3xl font-bold text-orange-600'>Fire and Rescue Emergency Management</p>
                 <img src={profile} alt='profile' className='w-8 h-8' />
             </div>
 
