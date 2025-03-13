@@ -12,10 +12,9 @@ const Home = () => {
     return (
         <div className='p-6'>
             <div className='bg-gray-200 w-[60%] m-auto p-4 rounded-md text-center mb-4'>
-                <h1 className='text-xl font-semibold mb-4'>Random Text</h1>
-                <p>bla bla bla .</p>
-                <p>bla bla bla .</p>
-                <p>bla bla bla   .</p>
+                <h1 className='text-xl font-bold mb-4'>Our Vision</h1>
+                <p className='font-semibold mb-2'>• To ensure community safety by creating basic awareness regarding fire safety, life safety and Disaster Management among the people and thereby mitigate the fire loss and improve effective and timely rescue and life saving activities.</p>
+                <p className='font-semibold'>• Minimize the response time in urban and rural areas by increasing the number of Fire & Rescue Stations and mobility profile of the Department.</p>
             </div>
 
             <div className='border border-gray-300 rounded-md p-4'>

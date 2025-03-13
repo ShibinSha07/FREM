@@ -1,113 +1,57 @@
-import { StyleSheet, View, Image, TouchableOpacity } from 'react-native'
+import { View, Image, TouchableOpacity, Text } from 'react-native'
 import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 const Layout = ({ children }) => {
+    const navigation = useNavigation();
+    const route = useRoute();
 
-  const navigation = useNavigation();
-  const route = useRoute();
+    const isHomeScreen = route.name === 'UserHome';
 
-  // Check if the current route is the home page
-  const isHomeScreen = route.name === 'UserHome';
+    return (
+        <View className="flex-1 mt-5">
 
-  return (
-    <View style={styles.container}>
+            <View className="px-4 mt-2 flex-row justify-between items-center">
+                <View>
+                    {isHomeScreen ? (
+                        <Image source={require('../assets/fire_logo.png')} className="w-10 h-10" />
+                    ) : (
+                        <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <Image source={require('../assets/back_icon.png')} className="w-6 h-6" />
+                        </TouchableOpacity>
+                    )}
+                </View>
 
-      <View style={styles.header}>
-        <View>
-          {isHomeScreen ? (
-            <Image source={require('../assets/fire_logo.png')} style={styles.tinyLogo} />
-          ) : (
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Image source={require('../assets/back_icon.png')} style={styles.backIcon} />
-            </TouchableOpacity>
-          )}
+                <View>
+                    <Text className="font-bold text-xl">FREM User</Text>
+                </View>
+
+                {/* <View className="flex-row gap-x-2">
+                    <TouchableOpacity>
+                        <Image source={require('../assets/icon_gear.png')} className="w-6 h-6" />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Image source={require('../assets/icon_bell.png')} className="w-6 h-6" />
+                    </TouchableOpacity>
+                </View> */}
+            </View>
+
+            <View className="flex-1 px-4 pt-4">
+                {children}
+            </View>
+
+            <View className="h-20 flex-row justify-around items-center border-t border-gray-300">
+                <TouchableOpacity onPress={() => navigation.navigate('UserHome')}>
+                    <Image source={require('../assets/icon_home.png')} className="w-8 h-8" />
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => navigation.navigate('FirstAid')}>
+                    <FontAwesome5 name="hand-holding-medical" size={24} color="#ff1b38" />
+                </TouchableOpacity>
+            </View>
         </View>
-
-        <View style={styles.right}>
-          <TouchableOpacity>
-            <Image source={require('../assets/icon_gear.png')} />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Image source={require('../assets/icon_bell.png')} />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View style={styles.content}>
-        {children}
-      </View>
-
-      <View style={styles.footer}>
-        <TouchableOpacity onPress={() => navigation.navigate('UserHome')}>
-          <Image source={require('../assets/icon_home.png')} style={styles.image1} />
-        </TouchableOpacity >
-
-        <TouchableOpacity 
-          onPress={() => navigation.navigate('FirstAid')}
-        >
-          <Image source={require('../assets/first_aid.png')} style={styles.image2} />
-        </TouchableOpacity>
-      </View>
-
-    </View>
-  )
+    )
 }
 
 export default Layout
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 20,
-    // backgroundColor: '#ffffff'
-    // padding: 15,
-
-  },
-  header: {
-    marginBottom: 10,
-    padding: 15,
-    height: 30,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    // backgroundColor: 'red'
-
-  },
-  right: {
-    flexDirection: 'row',
-    gap: 10
-  },
-  tinyLogo: {
-    height: 40,
-    width: 40,
-  },
-
-  content: {
-    flex: 1,
-    paddingHorizontal: 15,
-    paddingTop: 15,
-    // padding: 15,
-  },
-  footer: {
-    height: 70,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    // position: 'absolute', // Fixes the footer to the bottom
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    // gap: 20,
-    borderTopWidth: 0.5, // Adds a border above the footer
-    borderTopColor: '#e0e0e0',
-    // backgroundColor: '#ffffff',
-  },
-  image1: {
-    width: 30,
-    height: 30,
-  },
-  image2: {
-    width: 30,
-    height: 30,
-  }
-})

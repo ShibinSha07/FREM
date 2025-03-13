@@ -2,15 +2,40 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { View, Text, ActivityIndicator } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
 
-const WaterResourceScreen = ({ route }) => {
+const WaterResourceScreen = () => {
 
-    const { location } = route.params;
+    const [location, setLocation] = useState(null)
     const [resources, setResources] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        const fetchLocation = async () => {
+            try {
+                let { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== "granted") {
+                    console.error("Permission to access location was denied");
+                    return;
+                }
+
+                let currentLocation = await Location.getCurrentPositionAsync({});
+                setLocation({
+                    latitude: currentLocation.coords.latitude,
+                    longitude: currentLocation.coords.longitude,
+                });
+
+            } catch (error) {
+                console.error("error in fetching the current location:", error)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchLocation();
+    }, [])
+
     const fetchWaterResources = async (latitude, longitude) => {
-        console.log("Fetching water resources...");
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=water&bounded=1&viewbox=${longitude - 0.05},${latitude - 0.05},${longitude + 0.05},${latitude + 0.05}`;
 
         try {
@@ -38,11 +63,14 @@ const WaterResourceScreen = ({ route }) => {
     };
 
     useEffect(() => {
-        console.log(location)
-        if (location) {
-            fetchWaterResources(location.coords.latitude, location.coords.longitude).then(setResources);
+        if (location?.latitude && location?.longitude) {
+            fetchWaterResources(location.latitude, location.longitude)
+                .then((data) => {
+                    setResources(data);
+                    setLoading(false);
+                })
+                .catch(() => setLoading(false));
         }
-        setLoading(false);
     }, [location]);
 
     return (
@@ -51,25 +79,30 @@ const WaterResourceScreen = ({ route }) => {
 
             {loading ? (
                 <View className="flex-1 items-center justify-center bg-gray-100">
-                    <ActivityIndicator size="large" color="#2563eb" />
+                    <ActivityIndicator size="large" color="orange" />
                     <Text className="text-lg text-blue-600 mt-4">Fetching water resources...</Text>
                 </View>
             ) : (
                 <View className="flex-1 mb-2">
                     <MapView
                         style={{ flex: 1, height: 500, width: "100%", marginTop: 10 }}
-                        initialRegion={{
-                            latitude: location.coords.latitude,
-                            longitude: location.coords.longitude,
+                        region={{
+                            latitude: location.latitude,
+                            longitude: location.longitude,
                             latitudeDelta: 0.05,
                             longitudeDelta: 0.05,
                         }}
                     >
-                        <Marker coordinate={{ latitude: location.coords.latitude, longitude: location.coords.longitude }} title="Your Location" pinColor="red" />
+                        <Marker
+                            coordinate={{ latitude: location.latitude, longitude: location.longitude }}
+                            title="Your Location"
+                            pinColor="red"
+                        />
 
                         {resources.map((res, index) => (
                             <Marker key={index} coordinate={{ latitude: res.lat, longitude: res.lon }} title={res.name} pinColor="#3498db" />
                         ))}
+
                     </MapView>
                 </View>
             )}

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import axios from 'axios';
 import { API_URL } from '../lib/api';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -29,8 +30,10 @@ const HomeScreen = ({ navigation }) => {
     return (
         <Layout>
             <View className="flex-1 px-4 pt-4">
-                <View className="w-full h-40 bg-gray-200 rounded-md mb-6 p-4">
-                    <Text className="text-center">Save Your life</Text>
+                <View className="w-full bg-red-100 border border-red-500 rounded-md mb-6 p-4">
+                    <Text className="text-center font-bold mb-2 text-xl">Our Vision</Text>
+                    <Text className='text-center'>Minimize the response time in urban and rural areas by increasing the number of Fire & Rescue Stations and mobility profile of the Department.
+                    </Text>
                 </View>
 
                 <View className="flex-1">
@@ -60,6 +63,14 @@ const HomeScreen = ({ navigation }) => {
                         />
                     )}
                 </View>
+
+                <TouchableOpacity
+                    className="absolute bottom-6 right-6 bg-blue-500 p-4 rounded-full shadow-lg"
+                    onPress={() => navigation.navigate('WaterResourceScreen')}
+                >
+                    <MaterialIcons name="water-drop" size={28} color="white" />
+                </TouchableOpacity>
+
             </View>
         </Layout>
     );

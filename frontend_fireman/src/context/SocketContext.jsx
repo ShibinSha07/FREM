@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import io from "socket.io-client";
 import { API_URL } from "../lib/api";
-import Popup from "../components/Popup";
+// import Popup from "../components/Popup";
 
 const socket = io(API_URL, {
     transports: ["websocket"],
