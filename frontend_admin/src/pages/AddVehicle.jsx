@@ -18,7 +18,7 @@ const AddVehicle = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`${API_URL}/vehicle/`, formData);
+            const response = await axios.post(`${API_URL}/vehicles/`, formData);
             if (response.status === 201) {
                 setFormData({ numberplate: '', model: '', yom: '', status: 'available' });
             } else {
