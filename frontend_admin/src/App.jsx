@@ -7,7 +7,7 @@ import Fireman from './pages/Fireman'
 import AddFireman from './pages/AddFireman'
 import Vehicle from './pages/Vehicle'
 import AddVehicle from './pages/AddVehicle'
-
+import Record from './paes/Record'
 function App() {
 
   return (
@@ -22,6 +22,7 @@ function App() {
             <Route path='/add-fireman' element={<AddFireman />} />
             <Route path='/vehicle' element={<Vehicle />} />
             <Route path='/add-vehicle' element={<AddVehicle />} />
+            <Route path='/record' element={<Record />} />
           </Routes>
         </BrowserRouter>
       </SocketProvider>
