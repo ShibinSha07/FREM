@@ -15,6 +15,7 @@ const Record = () => {
                 const response = await axios.get(`${API_URL}/incidents`, {
                     params: { date: date.toISOString().split('T')[0] }
                 });
+                console.log(response)
                 setIncidents(response.data);
                 calculateStatistics(response.data);
             } catch (error) {
@@ -40,9 +41,9 @@ const Record = () => {
     return (
         <div className='p-6'>
             <h1 className='text-xl font-bold mb-4'>Incident Records</h1>
-            <div className='mb-4'>
+            {/* <div className='mb-4'>
                 <Calendar onChange={setDate} value={date} />
-            </div>
+            </div> */}
 
             <div className='border border-gray-300 rounded-md p-4 mb-4'>
                 <h2 className='text-lg font-bold mb-2'>Statistics</h2>
@@ -52,7 +53,8 @@ const Record = () => {
             </div>
 
             <div className='border border-gray-300 rounded-md p-4'>
-                <h2 className='text-lg font-bold mb-2'>Incidents on {date.toDateString()}</h2>
+                <h2 className='text-lg font-bold mb-2'>Reported Incidents</h2>
+                {/* <h2 className='text-lg font-bold mb-2'>Incidents on {date.toDateString()}</h2> */}
                 {incidents.length > 0 ? (
                     incidents.map((incident) => (
                         <div key={incident.id} className='border border-gray-300 rounded-md p-4 mb-2'>

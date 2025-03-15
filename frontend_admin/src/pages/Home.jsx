@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useSocket } from '../context/SocketContext'
 import IncidentModal from '../components/IncidentModal';
-import Sidebar from '../components/Sidebar';
 
 const Home = () => {
 
@@ -11,7 +10,7 @@ const Home = () => {
     const acitveIncidents = incidents.filter(incident => incident.status === "pending")
 
     return (
-        <div className='ml-72'>
+        <div className='mt-4 ml-4'>
 
             <div className='bg-gradient-to-r from-orange-200 to-orange-500 w-[60%] m-auto p-4 rounded-md text-center mb-4'>
                 <h1 className='text-xl font-bold mb-4'>Our Vision</h1>
@@ -27,7 +26,7 @@ const Home = () => {
                         acitveIncidents.map((incident) => (
                             <div
                                 key={incident.id}
-                                className='border border-gray-300 rounded-md p-4 hover:border-orange-500 hover:bg-orange-200'
+                                className='border border-gray-300 rounded-md p-4 hover:border-orange-500'
                                 onClick={() => setSelectedIncident(incident)}
                             >
                                 <p><strong>Location: </strong>{incident.place}</p>
