@@ -32,7 +32,7 @@ const AddFireman = () => {
                 console.error('Failed to add fireman');
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error:', error.message);
         }
     };
 
