@@ -40,7 +40,7 @@ const Popup = () => {
                 shouldCloseOnOverlayClick={false}
                 style={{
                     overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
-                    content: { width: "600px", height: "650px", margin: "auto", padding: "20px", borderRadius: "10px", display: "flex", flexDirection: "column", justifyContent: "space-between" }
+                    content: {marginTop: '45px', width: "650px", height: "640px", margin: "auto", padding: "20px", borderRadius: "10px", display: "flex", flexDirection: "column", justifyContent: "space-between" }
                 }}
             >
                 <h2 className='text-2xl font-bold text-center mb-4'>🚨 Emergency Alert</h2>

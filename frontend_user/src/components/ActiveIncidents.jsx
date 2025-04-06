@@ -35,7 +35,7 @@ const ActiveIncidents = () => {
                     <ActivityIndicator size="large" color="#FF4500" />
                 </View>
             ) : incidents.length === 0 ? (
-                <Text>No pending incidents found.</Text>
+                <Text className='text-center mb-4'>No active incidents.</Text>
             ) : (
                 <FlatList
                     data={incidents}
