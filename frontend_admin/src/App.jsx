@@ -16,7 +16,7 @@ function App() {
             <BrowserRouter>
                 <Popup />
                 <Routes>
-                    <Route element={<DashboardLayout />}>
+                    <Route path="/" element={<DashboardLayout />}>
                         <Route path="/" element={<Home />} />
                         <Route path="fireman" element={<Fireman />} />
                         <Route path="add-fireman" element={<AddFireman />} />

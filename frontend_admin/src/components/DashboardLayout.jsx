@@ -5,12 +5,11 @@ import Sidebar from "./Sidebar";
 const DashboardLayout = () => {
 
     return (
-        <div className="flex h-screen flex-col">
-
-            <div className="flex flex-1">
-                <Sidebar />
-                <main className="flex-1 bg-gray-100 ml-64">
-                    <Navbar />
+        <div className="flex h-screen">
+            <Sidebar />
+            <div className="flex flex-col flex-1 ml-64">
+                <Navbar />
+                <main className="flex-1 p-4 overflow-y-auto bg-gray-100">
                     <Outlet />
                 </main>
             </div>

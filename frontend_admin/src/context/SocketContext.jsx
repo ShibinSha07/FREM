@@ -13,17 +13,21 @@ export const SocketProvider = ({ children }) => {
 
     const [incidents, setIncidents] = useState([])
     const [popup, setPopup] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    const fetchIncidents = async () => {
+        try {
+            setLoading(true)
+            const response = await axios.get(`${API_URL}/incidents`)
+            setIncidents(response.data)
+        } catch (error) {
+            console.error("error in fetching the incidents", error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     useEffect(() => {
-        const fetchIncidents = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/incidents`)
-                setIncidents(response.data)
-            } catch (error) {
-                console.error("error in fetching the incidents", error)
-            }
-        }
-
         fetchIncidents();
     }, [])
 
@@ -38,7 +42,7 @@ export const SocketProvider = ({ children }) => {
     }, [])
 
     return (
-        <SocketContext.Provider value={{ incidents, popup, setPopup }}>
+        <SocketContext.Provider value={{ incidents, popup, setPopup, loading, fetchIncidents  }}>
             {children}
         </SocketContext.Provider>
     );

@@ -2,15 +2,19 @@ import React, { useState } from 'react'
 import { API_URL } from '../lib/api';
 import axios from 'axios'
 import AllotFiremanModal from './AllotFiremanModal';
+import { useSocket } from '../context/SocketContext';
 
 const IncidentModal = ({ incident, onClose }) => {
 
     const [showFiremanModal, setShowFiremanModal] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const { fetchIncidents } = useSocket(); 
 
     if (!incident) return null;
 
     const handleUpdateStatus = async () => {
         try {
+            setLoading(true)
             await axios.delete(`${API_URL}/allocation/${incident.id}`);
 
             const response = await axios.put(`${API_URL}/incidents/${incident.id}/status`, {
@@ -19,10 +23,13 @@ const IncidentModal = ({ incident, onClose }) => {
 
             if (response.status === 200) {
                 alert('incident marked as finished and firemen deallocated!')
+                await fetchIncidents();
                 onClose();
             }
         } catch (error) {
             console.error("error updating status:", error.message)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -51,8 +58,9 @@ const IncidentModal = ({ incident, onClose }) => {
                         <button
                             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 flex-1"
                             onClick={handleUpdateStatus}
+                            disabled={loading}
                         >
-                            Finished
+                            {loading ? "Finishing..." : "Finished"}
                         </button>
                     </div>
                 </div>

@@ -6,7 +6,7 @@ import { API_URL } from '../lib/api';
 
 const Popup = () => {
 
-    const { popup, setPopup, incidents } = useSocket();
+    const { popup, setPopup, incidents, fetchIncidents } = useSocket();
     const [note, setNote] = useState("");
 
     const acitveIncidents = incidents.filter(incident => incident.status === "pending")
@@ -23,9 +23,8 @@ const Popup = () => {
             setPopup(null)
             setNote("")
 
-            setTimeout(() => {
-                alert("New incident reported");
-            }, 100);
+            alert("New incident reported");
+            await fetchIncidents();
 
         } catch (error) {
             console.error("error in creating the incident", error)
@@ -40,7 +39,7 @@ const Popup = () => {
                 shouldCloseOnOverlayClick={false}
                 style={{
                     overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
-                    content: {marginTop: '45px', width: "650px", height: "640px", margin: "auto", padding: "20px", borderRadius: "10px", display: "flex", flexDirection: "column", justifyContent: "space-between" }
+                    content: { marginTop: '45px', width: "700px", height: "700px", margin: "auto", padding: "20px", borderRadius: "10px", display: "flex", flexDirection: "column", justifyContent: "space-between" }
                 }}
             >
                 <h2 className='text-2xl font-bold text-center mb-4'>🚨 Emergency Alert</h2>
