@@ -13,7 +13,6 @@ export const SocketProvider = ({ children }) => {
 
     const [incidents, setIncidents] = useState([])
     const [popup, setPopup] = useState(null)
-    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const fetchIncidents = async () => {
@@ -22,8 +21,6 @@ export const SocketProvider = ({ children }) => {
                 setIncidents(response.data)
             } catch (error) {
                 console.error("error in fetching the incidents", error)
-            } finally{
-                setLoading(false)
             }
         }
 

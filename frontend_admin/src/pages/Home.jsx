@@ -31,6 +31,7 @@ const Home = () => {
                             >
                                 <p><strong>Location: </strong>{incident.place}</p>
                                 <p><strong>Note: </strong>{incident.note}</p>
+                                <p><strong>Date: </strong>{new Date(incident.timestamp).toLocaleString()}</p>
                             </div>
                         ))
                     ) : (
