@@ -13,6 +13,7 @@ export const SocketProvider = ({ children }) => {
 
     const [incidents, setIncidents] = useState([])
     const [popup, setPopup] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const fetchIncidents = async () => {
@@ -21,6 +22,8 @@ export const SocketProvider = ({ children }) => {
                 setIncidents(response.data)
             } catch (error) {
                 console.error("error in fetching the incidents", error)
+            } finally{
+                setLoading(false)
             }
         }
 
@@ -36,15 +39,6 @@ export const SocketProvider = ({ children }) => {
             socket.off("new_call");
         };
     }, [])
-
-    // useEffect(() => {
-    //     const dummyData = {
-    //         place: "Main Street, NY",
-    //         coordinates: "3849083 34980384"
-    //     };
-    //     setPopup(dummyData);
-    // }, []);
-
 
     return (
         <SocketContext.Provider value={{ incidents, popup, setPopup }}>

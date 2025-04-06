@@ -20,8 +20,8 @@ const Popup = () => {
                 note: note
             })
 
-            console.log("Response:", response.data);
             setPopup(null)
+            setNote("")
 
             setTimeout(() => {
                 alert("New incident reported");

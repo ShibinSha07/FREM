@@ -4,17 +4,30 @@ from ..models import Incident
 from datetime import datetime
 
 incidents_bp = Blueprint('incidents', __name__)
-
 @incidents_bp.route('/', methods=['GET'])
 def get_incidents():
-    incidents = Incident.query.all()
+    date_str = request.args.get('date')
+
+    if date_str:
+        try:
+            date = datetime.strptime(date_str, "%Y-%m-%d").date()
+            incidents = Incident.query.filter(
+                db.func.date(Incident.timestamp) == date
+            ).order_by(Incident.timestamp.desc()).all()
+        except ValueError:
+            return jsonify({"error": "Invalid date format. Use YYYY-MM-DD."}), 400
+    else:
+        incidents = Incident.query.order_by(Incident.timestamp.desc()).all()
+
     return jsonify([{
         "id": inc.id,
         "place": inc.place,
         "coordinates": inc.coordinates,
         "status": inc.status,
-        "note": inc.note
+        "note": inc.note,
+        "timestamp": inc.timestamp.isoformat() if inc.timestamp else None
     } for inc in incidents]), 200
+
     
 @incidents_bp.route('/', methods=['POST'])
 def create_incident():
