@@ -83,12 +83,12 @@ const Fireman = () => {
                                     <td className="px-4 py-4 flex justify-center items-center">
                                         {fireman.status === "Off-Duty" ? (
                                             <CgMathPlus
-                                                className="text-green-500 text-2xl cursor-pointer bg-gray-300 rounded-sm"
+                                                className="text-green-500 text-2xl cursor-pointer bg-orange-100 rounded-sm"
                                                 onClick={() => updateStatus(fireman.fid, "On-Duty")}
                                             />
                                         ) : (
                                             <CgMathMinus
-                                                className="text-red-500 text-2xl cursor-pointer bg-gray-300 rounded-sm"
+                                                className="text-red-500 text-2xl cursor-pointer bg-orange-100 rounded-sm"
                                                 onClick={() => updateStatus(fireman.fid, "Off-Duty")}
                                             />
                                         )}
