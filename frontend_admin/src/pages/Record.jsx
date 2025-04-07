@@ -13,7 +13,7 @@ const Record = () => {
         const fetchIncidents = async () => {
             try {
                 const params = date ? { date: date.toLocaleDateString('en-CA') } : {};
-                const response = await axios.get(`${API_URL}/incidents`, { params });
+                const response = await axios.get(`${API_URL}/incidents/`, { params });
                 setIncidents(response.data);
                 calculateStatistics(response.data);
             } catch (error) {
@@ -38,7 +38,7 @@ const Record = () => {
 
     const handleDownloadPDF = async (incidentId) => {
         try {
-            const response = await axios.get(`${API_URL}/incidents/download/${incidentId}`, {
+            const response = await axios.get(`${API_URL}/incidents/download/${incidentId}/`, {
                 responseType: 'blob', 
             });
 

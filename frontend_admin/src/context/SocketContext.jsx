@@ -19,7 +19,7 @@ export const SocketProvider = ({ children }) => {
     const fetchIncidents = async () => {
         try {
             setLoading(true)
-            const response = await axios.get(`${API_URL}/incidents`)
+            const response = await axios.get(`${API_URL}/incidents/`)
             setIncidents(response.data)
         } catch (error) {
             console.error("error in fetching the incidents", error)

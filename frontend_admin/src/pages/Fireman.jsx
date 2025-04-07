@@ -12,7 +12,7 @@ const Fireman = () => {
     useEffect(() => {
         const fetchFireman = async () => {
             try {
-                const response = await axios.get(`${API_URL}/fireman`)
+                const response = await axios.get(`${API_URL}/fireman/`)
                 setFireman(response.data);
             } catch (error) {
                 console.error("error in fetching fireman", error)
