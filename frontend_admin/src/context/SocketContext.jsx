@@ -3,7 +3,8 @@ import io from "socket.io-client";
 import { API_URL } from '../lib/api';
 import axios from 'axios'
 
-const socket = io("http://127.0.0.1:3001");
+
+const socket = io(API_URL);
 
 const SocketContext = createContext();
 
