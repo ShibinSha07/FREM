@@ -1,7 +1,10 @@
+from io import BytesIO
 from flask import Blueprint, request, jsonify
 from .. import db, socketio
 from ..models import Incident
 from datetime import datetime
+from flask import send_file, url_for
+from xhtml2pdf import pisa
 
 incidents_bp = Blueprint('incidents', __name__)
 @incidents_bp.route('/', methods=['GET'])
@@ -76,3 +79,73 @@ def update_incident_status(id):
         "incident_id": incident.id,
         "new_status": incident.status
     }), 200
+    
+@incidents_bp.route('/download/<int:incident_id>', methods=['GET'])
+def download_pdf(incident_id):
+    print("downloading")
+    incident = Incident.query.get_or_404(incident_id)
+
+    logo_url = url_for('static', filename='images/fire_logo.png', _external=True)
+
+    html = f"""
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                padding: 20px;
+            }}
+            .header {{
+                text-align: center;
+                margin-bottom: 0px;
+            }}
+            .header img {{
+                width: 60px;
+                height: auto;
+                margin-bottom: 0px;
+            }}
+            .header h1 {{
+                font-size: 24px;
+                margin: 0;
+            }}
+            .header h2 {{
+                font-size: 18px;
+                margin: 0px 0 0 0;
+            }}
+            .section {{
+                margin-bottom: 2px;
+            }}
+            .section p{{
+                margin-bottom: 0px
+            }}
+            .label {{
+                font-weight: bold;
+            }}
+        </style>
+    </head>
+    <body>
+    
+        <div class="header">
+            <img src="{logo_url}" alt="FREM Logo" />
+            <h1>Fire and Rescue Emergency Management - FREM</h1>
+            <h2>Incident Report</h2>
+        </div>
+        
+        <hr/>
+
+        <div class="section">
+            <p><span class="label">Location:</span> {incident.place}</p>
+            <p><span class="label">Coordinates:</span> {incident.coordinates}</p>
+            <p><span class="label">Note:</span> {incident.note or 'N/A'}</p>
+            <p><span class="label">Status:</span> {incident.status}</p>
+            <p><span class="label">Date:</span> {incident.timestamp.strftime('%Y-%m-%d %H:%M:%S')}</p>
+        </div>
+    </body>
+    </html>
+    """
+
+    result = BytesIO()
+    pisa.CreatePDF(html, dest=result)
+    result.seek(0)
+
+    return send_file(result, download_name=f'incident_{incident_id}.pdf', as_attachment=True)

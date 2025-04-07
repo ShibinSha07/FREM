@@ -36,6 +36,24 @@ const Record = () => {
         });
     };
 
+    const handleDownloadPDF = async (incidentId) => {
+        try {
+            const response = await axios.get(`${API_URL}/incidents/download/${incidentId}`, {
+                responseType: 'blob', 
+            });
+
+            const url = window.URL.createObjectURL(response.data);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `incident_${incidentId}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } catch (error) {
+            console.error("PDF download failed:", error);
+        }
+    };
+
     return (
         <div className='p-6'>
 
@@ -70,12 +88,22 @@ const Record = () => {
 
                 {incidents.length > 0 ? (
                     incidents.map((incident) => (
-                        <div key={incident.id} className='border border-gray-300 rounded-md p-4 mb-2'>
+                        <div
+                            id={`incident-${incident.id}`}
+                            key={incident.id}
+                            className='border border-gray-300 rounded-md p-4 mb-2 relative'
+                        >
                             <p><strong>Location: </strong>{incident.place}</p>
                             <p><strong>Coordinates: </strong>{incident.coordinates}</p>
                             <p><strong>Note: </strong>{incident.note}</p>
                             <p><strong>Status: </strong>{incident.status}</p>
                             <p><strong>Date: </strong>{new Date(incident.timestamp).toLocaleString()}</p>
+                            <button
+                                onClick={() => handleDownloadPDF(incident.id)}
+                                className='mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600'
+                            >
+                                Download as PDF
+                            </button>
                         </div>
                     ))
                 ) : (
