@@ -47,7 +47,6 @@ const Map = () => {
 
     const makeCall = async () => {
         try {
-            console.log("making call")
 
             const phoneNumber = "tel:8281396739";
 

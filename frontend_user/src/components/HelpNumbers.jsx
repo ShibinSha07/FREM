@@ -2,7 +2,7 @@ import { View, Text, FlatList, TouchableOpacity, Linking } from 'react-native';
 import React, { useState } from 'react';
 
 const fireStations = [
-    { id: '1', name: 'Fire Station 1', phone: '1234567890', place: 'City Center' },
+    { id: '1', name: 'Fire Station 1', phone: '0487 242 4192', place: 'City Center' },
     { id: '2', name: 'Fire Station 2', phone: '2345678901', place: 'Downtown' },
     { id: '3', name: 'Fire Station 3', phone: '3456789012', place: 'Northside' },
     { id: '4', name: 'Fire Station 4', phone: '4567890123', place: 'Southside' },
@@ -13,8 +13,8 @@ const fireStations = [
 ];
 
 const policeStations = [
-    { id: '1', name: 'Police Station 1', phone: '1012023030', place: 'Central District' },
-    { id: '2', name: 'Police Station 2', phone: '2023034040', place: 'North District' },
+    { id: '1', name: 'Thrissur East Police Station', phone: '0487 242 4192', place: 'New, Pattalam Rd, Sakthan Thampuran Nagar, Veliyannur, Thrissur,' },
+    { id: '2', name: 'Thrissur West Police Station', phone: '0487 236 3608', place: 'G5CR+F6H, Outpost Rd, Kalyan Nagar, Ayyanthole, Thrissur,' },
     { id: '3', name: 'Police Station 3', phone: '3034045050', place: 'West District' },
     { id: '4', name: 'Police Station 4', phone: '4045056060', place: 'South District' },
     { id: '5', name: 'Police Station 5', phone: '5056067070', place: 'East District' },
