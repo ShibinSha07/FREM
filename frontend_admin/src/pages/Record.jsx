@@ -38,7 +38,7 @@ const Record = () => {
 
     const handleDownloadPDF = async (incidentId) => {
         try {
-            const response = await axios.get(`${API_URL}/incidents/download/${incidentId}/`, {
+            const response = await axios.get(`${API_URL}/incidents/download/${incidentId}`, {
                 responseType: 'blob', 
             });
 
