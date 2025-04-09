@@ -112,15 +112,11 @@ def download_pdf(incident_id):
                 font-size: 18px;
                 margin: 0px 0 0 0;
             }}
-            .section {{
-                margin-bottom: 2px;
+            p {{
+               font-size: 20px;
             }}
-            .section p{{
-                margin-bottom: 0px
-            }}
-            .label {{
-                font-weight: bold;
-            }}
+           
+            
         </style>
     </head>
     <body>
@@ -132,14 +128,23 @@ def download_pdf(incident_id):
         </div>
         
         <hr/>
+        
+        <div>
+    <p>
+        On <strong>{incident.timestamp.strftime('%Y-%m-%d %H:%M:%S')}</strong>, an incident was 
+        reported at <strong>{incident.place}</strong> and was promptly addressed by the Fire and Rescue Emergency Management (FREM) team.
+        The precise coordinates of the incident location were <strong>{incident.coordinates}</strong>, representing the latitude and longitude respectively. 
+        Upon receiving the alert, the FREM team responded swiftly to assess and manage the situation. 
+        The response was successfully completed, and the incident status was marked as <strong>{incident.status}</strong> 
+        following the necessary interventions. 
+        This report serves to officially document the occurrence and resolution of the incident by the responsible authorities.
+    </p>
+</div>
 
-        <div class="section">
-            <p><span class="label">Location:</span> {incident.place}</p>
-            <p><span class="label">Coordinates:</span> {incident.coordinates}</p>
-            <p><span class="label">Note:</span> {incident.note or 'N/A'}</p>
-            <p><span class="label">Status:</span> {incident.status}</p>
-            <p><span class="label">Date:</span> {incident.timestamp.strftime('%Y-%m-%d %H:%M:%S')}</p>
-        </div>
+    <p>Admin</p>
+    <p>Sd/-</p>
+
+
     </body>
     </html>
     """
